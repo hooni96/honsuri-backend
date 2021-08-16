@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 # drf-yasg --------------------
 from django.conf.urls import url
 from rest_framework import permissions
@@ -22,6 +22,7 @@ from django.conf import settings
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 # -----------------------------
+# from mbti.views import helloworld  # views.py에서 우리가 만든 helloworld 함수를 가져온다.
 
 # drf-yasg --------------------
 schema_view = get_schema_view( 
@@ -39,6 +40,8 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path('', helloworld),
+    path('', include('mbti.urls')), # mbti/urls.py 사용
 ]
 
 # 이건 디버그일때만 swagger 문서가 보이도록 해주는 설정. 
