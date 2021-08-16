@@ -9,5 +9,5 @@ from mbti.models import Mbti # 선언한 모델 import
 #     return HttpResponse('hello world!')
 
 class MbtiViewSet(viewsets.ModelViewSet): # ModelViewSet 활용
-    queryset = Mbti.objects.all()
-    serializer_class = MbtiSerializer
+    queryset = Mbti.objects.all() # 존재하는 테이블의 데이터를 전부 가져오겠다는 뜻
+    serializer_class = MbtiSerializer # 이전에 생성하였던 MbtiSerializer 클래스를 이용하겠다는 뜻
