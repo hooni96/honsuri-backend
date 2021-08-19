@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders', # CORS 관련 추가
     'honsuri',
     'mbti',
+    'core',
 ]
 
 MIDDLEWARE = [
