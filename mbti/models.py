@@ -1,6 +1,7 @@
 from django.db import models
+from core.models import TimestampModel
 
-class Mbti(models.Model):
+class Mbti(TimestampModel):
     # 기본적으로, Django에서는 각각의 모델에 id필드를 자동으로 추가해준다
     # 그래서 id 필드는 만들지 않았음
     question = models.TextField(blank=True)
