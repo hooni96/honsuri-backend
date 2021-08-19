@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'honsuri',
     'recipe',
     'core',
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -91,6 +92,8 @@ DATABASES = my_settings.DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = 'account.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
