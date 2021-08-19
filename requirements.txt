@@ -9,9 +9,11 @@ coreschema==0.0.4
 Django==3.2.6
 django-cors-headers==3.7.0
 djangorestframework==3.12.4
+djangorestframework-jwt==1.11.0
 drf-yasg==1.20.0
 gunicorn==20.1.0
 idna==3.2
+importlib-metadata==4.6.3
 inflection==0.5.1
 iniconfig==1.1.1
 itypes==1.2.0
@@ -25,6 +27,7 @@ pafy==0.5.5
 pluggy==0.13.1
 py==1.10.0
 pyglet==1.5.18
+PyJWT==1.7.1
 pyparsing==2.4.7
 pytest==6.2.4
 pytest-django==4.4.0
@@ -36,6 +39,8 @@ selenium==3.141.0
 soupsieve==2.2.1
 sqlparse==0.4.1
 toml==0.10.2
+typing-extensions==3.10.0.0
 uritemplate==3.0.1
 urllib3==1.26.6
 youtube-dl==2021.6.6
+zipp==3.5.0
