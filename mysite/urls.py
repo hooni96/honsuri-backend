@@ -42,7 +42,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('music.urls')),
     path('', include('mbti.urls')), # mbti/urls.py 사용
-    path('', include('post.urls')), # opost/urls.py 사용
+    path('', include('post.urls')), # post/urls.py 사용
 ]
 
 # 이건 디버그일때만 swagger 문서가 보이도록 해주는 설정. 
