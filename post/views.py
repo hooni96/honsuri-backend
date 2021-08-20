@@ -7,7 +7,9 @@ from django.http import Http404
 from .serializers import PostSerializer
 from .models import Post
 
-class Post(APIView): 
+from drf_yasg.utils import swagger_auto_schema 
+
+class PostView(APIView): 
     '''
     def Post: 방명록 작성
     def Get: 방명록 리스트 
@@ -15,6 +17,7 @@ class Post(APIView):
     ---
     '''
     # 방명록 작성
+    @swagger_auto_schema(request_body=PostSerializer)
     def post(self, request):
         serializer = PostSerializer(data=request.data)
         #유효성 검사
