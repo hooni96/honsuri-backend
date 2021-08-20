@@ -10,10 +10,7 @@ from .models import Post
 
 class PostList(APIView): 
     '''
-    def Post: 방명록 작성
-    def Get: 방명록 리스트 
-    def Get: 방명록 검색
-    ---
+    def Post: 방명록 작성 
     '''
     # 방명록 작성
     @swagger_auto_schema(request_body=PostSerializer)
@@ -24,11 +21,16 @@ class PostList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+    '''
+    def Get: 방명록 리스트 
+    '''
     def get(self, request):
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
+    '''
+    def Get: 방명록 리스트 검색 
+    '''
 
 # class LikeView(ModelViewSet): 
 #     '''
