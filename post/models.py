@@ -2,22 +2,10 @@ from django.db import models
 
 #Post Model
 class Post(models.Model):
-    content = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(blank=True, verbose_name="방명록 내용")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="방명록 작성 날짜")
+    photo = models.CharField(max_length=100, verbose_name="방명록 사진")
     # user_id = models.ForeignKey("User", related_name="post", on_delete=models.CASCADE)
-    
-    # likes_post = models.ManyToManyField(
-    #     User, 
-    #     through= 'LikeProduct', 
-    #     related_name='like_product', 
-    #     blank=True
-    # )
-    # report_post = models.ManyToManyField(
-    #     User, 
-    #     through= 'ReportProduct', 
-    #     related_name='report_product', 
-    #     blank=True
-    # )
 
     def __str__(self):
         return self.content
@@ -27,8 +15,8 @@ class Post(models.Model):
 
 #Comment Model
 class Comment(models.Model):
-    content = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(blank=True, verbose_name="댓글 내용")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="댓글 작성 날짜")
     # FK
     # post_id = models.ForeignKey("Post", related_name="post", on_delete=models.CASCADE, db_column="id")
     # user_id = models.ForeignKey("User", related_name="comment", on_delete=models.CASCADE)

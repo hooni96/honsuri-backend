@@ -1,9 +1,9 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
+from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 
-app_name = "post"
-router = DefaultRouter()
-router.register(r'Post', views.PostViewSet)
+urlpatterns =[
+    path('post/', views.Post.as_view()),
+]
 
-
-urlpatterns = router.urls
+urlpatterns = format_suffix_patterns(urlpatterns)

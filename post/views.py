@@ -1,21 +1,32 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+#APIView 사용하기 위해 import
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.http import Http404
 
 from .serializers import PostSerializer
-from .models import Post, Comment, Like
-      
-from django.shortcuts import get_object_or_404
+from .models import Post
 
-class PostViewSet(ModelViewSet): 
+class Post(APIView): 
     '''
-    def Post: 방명록 작성 api
+    def Post: 방명록 작성
     def Get: 방명록 리스트 
     def Get: 방명록 검색
     ---
     '''
-    queryset = Post.objects.all() 
-    serializer_class = PostSerializer 
-
+    # 방명록 작성
+    def post(self, request):
+        serializer = PostSerializer(data=request.data)
+        #유효성 검사
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request):
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
 
 # class LikeView(ModelViewSet): 
 #     '''
