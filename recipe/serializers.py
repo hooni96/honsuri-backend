@@ -2,6 +2,12 @@ from rest_framework import serializers # serializer import
 from recipe.models import * # 선언한 모델 import
 from drf_yasg import openapi
 
+# user_id는 jwt token에서 받아오도록 수정할 예정
+class BookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bookmark
+        fields = ("user_id",)
+
 class BaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Base
