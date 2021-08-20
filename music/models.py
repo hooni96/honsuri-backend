@@ -1,6 +1,7 @@
 from django.db import models
+from core.models import TimestampModel
 
-class Music(models.Model):
+class Music(TimestampModel):
     title = models.CharField(max_length=100, verbose_name="노래 제목")
     # 장고에서 3.1 버전부터 JSONField 사용가능
     photo = models.CharField(max_length=100, verbose_name="앨범 사진 이름")
