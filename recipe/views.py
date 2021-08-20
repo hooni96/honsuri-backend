@@ -1,10 +1,14 @@
 from django.shortcuts import render
 
-from .serializers import RecipeSerializer # 생성한 serializer import
+from .serializers import RecipeMainSerializer, RecipeDetailSerializer
 from recipe.models import Recipe # 선언한 모델 import
-# from rest_framework import generics
-from rest_framework import viewsets # vieset import
+from rest_framework import generics
+# from rest_framework import viewsets # vieset import
 
-class RecipeViewSet(viewsets.ModelViewSet): # ModelViewSet 활용
+class RecipeMainView(generics.ListAPIView): 
     queryset = Recipe.objects.all() 
-    serializer_class = RecipeSerializer 
+    serializer_class = RecipeMainSerializer 
+
+class RecipeDetailView(generics.RetrieveAPIView): 
+    queryset = Recipe.objects.all() 
+    serializer_class = RecipeDetailSerializer 
