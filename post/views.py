@@ -22,7 +22,7 @@ class PostList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     '''
-    def Get: 방명록 리스트 
+    def Post: 방명록 작성 
     '''
     def get(self, request):
         posts = Post.objects.all()
