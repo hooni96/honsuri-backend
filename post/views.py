@@ -1,4 +1,5 @@
 #APIView 사용하기 위해 import
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,7 +8,7 @@ from django.http import Http404
 from .serializers import PostSerializer
 from .models import Post
 
-class Post(APIView): 
+class PostList(APIView): 
     '''
     def Post: 방명록 작성
     def Get: 방명록 리스트 
@@ -15,6 +16,7 @@ class Post(APIView):
     ---
     '''
     # 방명록 작성
+    @swagger_auto_schema(request_body=PostSerializer)
     def post(self, request):
         serializer = PostSerializer(data=request.data)
         #유효성 검사
