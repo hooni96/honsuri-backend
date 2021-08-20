@@ -44,7 +44,11 @@ INSTALLED_APPS = [
     'corsheaders', # CORS 관련 추가
     'honsuri',
     'post'
+    'music',
+    'mbti',
+    'core',
 ]
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', # CORS 관련 추가
