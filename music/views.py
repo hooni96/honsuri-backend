@@ -1,9 +1,9 @@
 from django.shortcuts import render
 
-from rest_framework import viewsets # vieset import
 from .serializers import MusicSerializer # 생성한 serializer import
 from music.models import Music # 선언한 모델 import
+from rest_framework import generics
 
-class MusicViewSet(viewsets.ModelViewSet): # ModelViewSet 활용
+class MusicView(generics.ListAPIView):
     queryset = Music.objects.all() 
     serializer_class = MusicSerializer

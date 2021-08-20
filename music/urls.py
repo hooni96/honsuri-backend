@@ -1,10 +1,8 @@
 from django.urls import include, path
-from rest_framework import routers  # router import
-from . import views  # views.py import
+from .views import MusicView  
 
-router = routers.DefaultRouter()  # DefaultRouter 설정
-router.register('music', views.MusicViewSet)  # ViewSet과 함께 mbti라는 router 등록
+app_name = 'music'
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('music/', MusicView.as_view(), name='music'),
 ]
