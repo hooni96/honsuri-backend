@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders', # CORS 관련 추가
     'honsuri',
-    'post'
+    'post',
     'music',
     'mbti',
     'core',

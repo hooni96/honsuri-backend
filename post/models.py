@@ -4,7 +4,7 @@ from django.db import models
 class Post(models.Model):
     content = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    user_id = models.ForeignKey("User", related_name="post", on_delete=models.CASCADE)
+    # user_id = models.ForeignKey("User", related_name="post", on_delete=models.CASCADE)
     
     # likes_post = models.ManyToManyField(
     #     User, 
