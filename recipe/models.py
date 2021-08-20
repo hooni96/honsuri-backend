@@ -8,11 +8,17 @@ from account.models import User
 class Base(TimestampModel):
     name = models.CharField(max_length=50, verbose_name="술 베이스", unique=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         db_table = "base"
 
 class Ingredient(TimestampModel):
     name = models.CharField(max_length=50, verbose_name="재료", unique=True)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         db_table = "ingredient"
@@ -20,11 +26,17 @@ class Ingredient(TimestampModel):
 class AlcoholVolume(TimestampModel):
     name = models.CharField(max_length=20, verbose_name="도수", unique=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         db_table = "alcohol_volume"
 
 class Flavor(TimestampModel):
     name = models.CharField(max_length=50, verbose_name="맛", unique=True)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         db_table = "flavor"
@@ -52,28 +64,40 @@ class Recipe(TimestampModel):
 class RecipeBase(TimestampModel):
     recipe  = models.ForeignKey(Recipe, on_delete = models.CASCADE, null=True)
     base = models.ForeignKey(Base, on_delete = models.CASCADE, null=True)
-    
+
+    def __str__(self):
+        return self.recipe.name + '-' + self.base.name
+
     class Meta:
         db_table = 'recipe_base'
 
 class RecipeIngredient(TimestampModel):
     recipe  = models.ForeignKey(Recipe, on_delete = models.CASCADE, null=True)
     ingredient  = models.ForeignKey(Ingredient, on_delete = models.CASCADE, null=True)
-    
+
+    def __str__(self):
+        return self.recipe.name + '-' + self.ingredient.name
+
     class Meta:
         db_table = 'recipe_ingredient'
 
 class RecipeAlcoholVolume(TimestampModel):
     recipe  = models.ForeignKey(Recipe, on_delete = models.CASCADE, null=True)
     alcohol_volume  = models.ForeignKey(AlcoholVolume, on_delete = models.CASCADE, null=True)
-    
+
+    def __str__(self):
+        return self.recipe.name + '-' + self.alcohol_volume.name
+
     class Meta:
         db_table = 'recipe_alcohol_volume'
 
 class RecipeFlavor(TimestampModel):
     recipe  = models.ForeignKey(Recipe, on_delete = models.CASCADE, null=True)
     flavor  = models.ForeignKey(Flavor, on_delete = models.CASCADE, null=True)
-    
+
+    def __str__(self):
+        return self.recipe.name + '-' + self.flavor.name
+
     class Meta:
         db_table = 'recipe_flavor'
 
