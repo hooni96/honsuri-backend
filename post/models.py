@@ -2,6 +2,7 @@ from django.db import models
 from account.models import User
 from datetime import datetime
 from core.models import TimestampModel
+from rest_framework.parsers import FormParser
 
 # def get_file_path(instance, filename):
 #     ymd_path = datetime.now().strftime("%Y/%m/%d")
@@ -23,7 +24,7 @@ class Post(TimestampModel):
 
 class PostImage(TimestampModel):
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='post',blank=True, null=True)
+    image = models.ImageField(upload_to='image/',blank=True, null=True)
 
     class Meta:
         db_table = "postImage"
