@@ -9,25 +9,35 @@ from django.http import Http404
 from .serializers import PostSerializer
 from .models import Post
 
-class PostList(APIView): 
-    '''
-    def Post: 방명록 작성 
-    '''
-    # 방명록 작성
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.decorators import parser_classes
+from drf_yasg import openapi
 
-    @swagger_auto_schema(request_body=PostSerializer)
-    
+class PostList(APIView): 
+    photo=openapi.Parameter(
+                            name="image",
+                            in_=openapi.IN_FORM,
+                            type=openapi.TYPE_FILE,
+                            required=True,
+                            description="Document"
+                            )
+    parser_classes = (MultiPartParser,)
+    @swagger_auto_schema(request_body=PostSerializer, manual_parameters = [photo])
     def post(self, request):
+        '''
+        방명록 작성 API 
+        '''
         serializer = PostSerializer(data=request.data, context={"request": request})
         #유효성 검사
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    '''
-    def Post: 방명록 작성 
-    '''
+    
     def get(self, request):
+        '''
+        방명록 리스트 API 
+        '''
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
