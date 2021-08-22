@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
-from django.db.models.expressions import F
-
 
 class UserManager(BaseUserManager): # 유저를 생성할 때 사용하는 Helper 클래스
     def create_user(self, email, name, nickname, phone_number, alcohol_amount, favorite_alcohol, favorite_food, favorite_combination, password=None):
