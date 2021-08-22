@@ -6,7 +6,7 @@ from .views import RecipeMainView, RecipeDetailView, BookmarkView
 
 
 urlpatterns = [
-    path('recipes', RecipeMainView.as_view(), name='recipe_main'),
-    path('recipes/<int:pk>', RecipeDetailView.as_view(), name='recipes_detail'),
+    path('recipes', RecipeMainView.as_view(), name='recipes'),
+    path('recipes/<int:pk>', RecipeDetailView.as_view(), name='recipe'),
     path('recipes/<int:pk>/bookmark', BookmarkView.as_view(), name='bookmark'), #  
 ]
