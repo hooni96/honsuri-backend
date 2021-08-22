@@ -3,6 +3,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
 
 from .serializers import PostSerializer
@@ -13,9 +14,11 @@ class PostList(APIView):
     def Post: 방명록 작성 
     '''
     # 방명록 작성
+
     @swagger_auto_schema(request_body=PostSerializer)
+    
     def post(self, request):
-        serializer = PostSerializer(data=request.data)
+        serializer = PostSerializer(data=request.data, context={"request": request})
         #유효성 검사
         if serializer.is_valid():
             serializer.save()
