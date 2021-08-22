@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
-from .serializers import RecipeMainSerializer, RecipeDetailSerializer, BookmarkSerializer, BaseSerializer
+from .serializers import *
 from recipe.models import * # 선언한 모델 import
 from rest_framework import status, generics
 from rest_framework.views import APIView
@@ -46,9 +46,6 @@ class RecipeDetailView(generics.RetrieveAPIView):
 
 # user_id는 jwt token에서 받아오도록 수정할 예정
 class BookmarkView(APIView): 
-    model = Bookmark
-    # serializer = BookmarkSerializer 
-
     user_pk = openapi.Parameter('user_pk', openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
     @swagger_auto_schema(manual_parameters=[user_pk])
     def post(self, request, pk):
@@ -58,16 +55,29 @@ class BookmarkView(APIView):
         레시피 id는 url path로 전달
         user_id는 jwt_token 으로 받아올 예정(이지만 아직 jwt_token 기능이 없어서 query로 받는 중)
         '''
-        recipe_id = pk
+        recipe = get_object_or_404(Recipe, pk=pk)
+        
+        # recipe_id = pk
         user_id = request.GET.get('user_pk')
-        user = User.objects.get(id = user_id)
-        recipe = Recipe.objects.get(id = recipe_id)
+        # user = User.objects.get(id = user_id)
+        # recipe = Recipe.objects.get(id = recipe_id)
 
-        if Bookmark.objects.filter(recipe_id=recipe_id, user_id=user_id).exists():
-            Bookmark.objects.get(recipe_id=recipe_id, user_id=user_id).delete()
+        print('-'*50)
+        print(recipe.bookmark)
+        print('-'*50)
+
+        if user_id in recipe.bookmark.all():
+            recipe.bookmark.remove(user_id)
             return Response({'message': 'DELETE_BOOKMARK'}, status=status.HTTP_200_OK)
         else:
-            Bookmark.objects.create(user_id=user, recipe_id=recipe).save
+            recipe.bookmark.add(user_id)
             return Response({'message': 'CREATE_BOOKMARK'}, status=status.HTTP_200_OK)
+
+        # if Bookmark.objects.filter(recipe_id=recipe_id, user_id=user_id).exists():
+        #     Bookmark.objects.get(recipe_id=recipe_id, user_id=user_id).delete()
+        #     return Response({'message': 'DELETE_BOOKMARK'}, status=status.HTTP_200_OK)
+        # else:
+        #     Bookmark.objects.create(user_id=user, recipe_id=recipe).save
+        #     return Response({'message': 'CREATE_BOOKMARK'}, status=status.HTTP_200_OK)
 
         

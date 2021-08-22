@@ -52,6 +52,7 @@ class Recipe(TimestampModel):
     ingredient = models.ManyToManyField(Ingredient, through = 'RecipeIngredient')
     alcohol_volume = models.ManyToManyField(AlcoholVolume, through = 'RecipeAlcoholVolume')
     flavor = models.ManyToManyField(Flavor, through = 'RecipeFlavor')
+    bookmark = models.ManyToManyField(User, related_name = 'bookmarks', blank=True)    
     
     def __str__(self):
         return self.name
@@ -102,9 +103,9 @@ class RecipeFlavor(TimestampModel):
         db_table = 'recipe_flavor'
 
 
-class Bookmark(TimestampModel):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
-    recipe_id = models.ForeignKey(Recipe, on_delete=models.CASCADE, db_column='recipe_id')
+# class Bookmark(TimestampModel):
+#     user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
+#     recipe_id = models.ForeignKey(Recipe, on_delete=models.CASCADE, db_column='recipe_id')
 
-    class Meta:
-        db_table = "bookmark"
+#     class Meta:
+#         db_table = "bookmark"

@@ -2,10 +2,10 @@ from rest_framework import serializers # serializer import
 from recipe.models import * # 선언한 모델 import
 from drf_yasg import openapi
 
-class BookmarkSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Bookmark
-        fields = ("user_id","recipe_id",)
+# class BookmarkSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Bookmark
+#         fields = ("user_id","recipe_id",)
 
 class BaseSerializer(serializers.ModelSerializer):
     class Meta:
