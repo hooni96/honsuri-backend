@@ -17,7 +17,8 @@ class PostList(APIView):
     photo=openapi.Parameter(
                             name="image",
                             in_=openapi.IN_FORM,
-                            type=openapi.TYPE_FILE,
+                            type=openapi.TYPE_ARRAY,
+                            items=openapi.Items(type=openapi.TYPE_FILE),
                             required=True,
                             description="Document"
                             )
