@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
+from django.urls import path, include
 # drf-yasg --------------------
 from django.conf.urls import url
 from rest_framework import permissions
@@ -39,6 +40,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('account/', include('account.urls')),
 ]
 
 # 이건 디버그일때만 swagger 문서가 보이도록 해주는 설정. 

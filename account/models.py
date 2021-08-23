@@ -37,18 +37,27 @@ class UserManager(BaseUserManager): # 유저를 생성할 때 사용하는 Helpe
         user.save(using=self._db)
         return user
 
+ALCOHOL = (
+    ('1잔 ~ 4잔', '1잔 ~ 4잔'),
+    ('5잔 ~ 1.5병', '5잔 ~ 1.5병'),
+    ('1.5병 ~ 2.5병', '1.5병 ~ 2.5병'),
+    ('2.5병 ~ 5병 이상', '2.5병 ~ 5병 이상'),
+)
 
 class User(AbstractBaseUser): 
+
     email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=40, unique=False, default='')
+    name = models.CharField(max_length=40, unique=False)
     nickname = models.CharField(max_length=40, unique=True)
     phone_number = models.IntegerField()
 
-    alcohol_amount = models.FloatField(blank=True)
+    alcohol_amount = models.CharField(blank=True, null=True, max_length=32, choices=ALCOHOL)
     favorite_alcohol = models.CharField(max_length=40, blank=True)
     favorite_food = models.CharField(max_length=40, blank=True)
     favorite_combination = models.CharField(max_length=40, blank=True)
 
+    # photo = models.ImageField(upload_to="profile/image", default='user.py')
+    
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
