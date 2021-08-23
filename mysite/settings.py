@@ -41,13 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'drf_yasg',
+    'ckeditor',
     'corsheaders', # CORS 관련 추가
     'honsuri',
     'post',
-    'music',
-    'mbti',
+    'recipe',
     'core',
     'account',
+    'music',
+    'mbti',
 ]
 
 
