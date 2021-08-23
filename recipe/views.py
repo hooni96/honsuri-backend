@@ -26,23 +26,53 @@ class RecipeMainView(APIView):
                             items=openapi.Items(type=openapi.TYPE_STRING),
                             collection_format = "multi"
                             )
-    @swagger_auto_schema(manual_parameters=[base])
+    user_pk = openapi.Parameter('user_pk',
+                            in_ = openapi.IN_QUERY,
+                            type=openapi.TYPE_INTEGER,
+                            )
+    @swagger_auto_schema(manual_parameters=[base,user_pk])
     def get(self, request):
         base = request.GET.getlist('base', None)
-        if base:
-            queryset = Recipe.objects.filter(base__in=base).distinct()
-            serializer = RecipeMainSerializer(queryset, many=True) 
+        # jwt_token 생기면 수정
+        user_id = int(request.GET.get('user_pk'))
+        
+        # base에 따른 queryset 필터링
+        queryset = Recipe.objects.filter(base__in=base).distinct() if base else Recipe.objects.all()
+        serializer = RecipeMainSerializer(queryset, many=True) 
+
+        # 북마크 추가파트
+        recipe_list = []
+        for each in serializer.data:
+            if user_id in each['bookmark']:
+                each['bookmark'] = True
+            else:
+                each['bookmark'] = False
+            recipe_list.append(each)
+
+        return Response(recipe_list)
+
+class RecipeDetailView(APIView): 
+    '''
+    path에 있는 레시피 id에 따라 레시피 디테일 정보를 반환하는 API 
+    '''
+    user_pk = openapi.Parameter('user_pk',
+                            in_ = openapi.IN_QUERY,
+                            type=openapi.TYPE_INTEGER,
+                            )
+    @swagger_auto_schema(manual_parameters=[user_pk])
+    def get(self, request, pk):
+        # jwt_token 생기면 수정
+        user_id = int(request.GET.get('user_pk'))
+        
+        # base에 따른 queryset 필터링
+        queryset = Recipe.objects.filter(id=pk)
+        serializer = RecipeMainSerializer(queryset, many=True)
+        if user_id in serializer.data[0]['bookmark']:
+            serializer.data[0]['bookmark'] = True
         else:
-            queryset = Recipe.objects.all() 
-            serializer = RecipeMainSerializer(queryset, many=True) 
-        return Response(serializer.data)        
-            
-class RecipeDetailView(generics.RetrieveAPIView): 
-    '''
-    레시피 id에 따라 레시피 디테일 정보를 반환하는 API 
-    '''
-    queryset = Recipe.objects.all() 
-    serializer_class = RecipeDetailSerializer 
+            serializer.data[0]['bookmark'] = False
+        
+        return Response(serializer.data)
 
 # user_id는 jwt token에서 받아오도록 수정할 예정
 class BookmarkView(APIView): 
@@ -57,27 +87,14 @@ class BookmarkView(APIView):
         '''
         recipe = get_object_or_404(Recipe, pk=pk)
         
-        # recipe_id = pk
-        user_id = request.GET.get('user_pk')
-        # user = User.objects.get(id = user_id)
-        # recipe = Recipe.objects.get(id = recipe_id)
+        user_id = int(request.GET.get('user_pk'))
+        user = User.objects.get(id = user_id)
 
-        print('-'*50)
-        print(recipe.bookmark)
-        print('-'*50)
-
-        if user_id in recipe.bookmark.all():
+        if user in recipe.bookmark.all():
             recipe.bookmark.remove(user_id)
             return Response({'message': 'DELETE_BOOKMARK'}, status=status.HTTP_200_OK)
         else:
             recipe.bookmark.add(user_id)
             return Response({'message': 'CREATE_BOOKMARK'}, status=status.HTTP_200_OK)
-
-        # if Bookmark.objects.filter(recipe_id=recipe_id, user_id=user_id).exists():
-        #     Bookmark.objects.get(recipe_id=recipe_id, user_id=user_id).delete()
-        #     return Response({'message': 'DELETE_BOOKMARK'}, status=status.HTTP_200_OK)
-        # else:
-        #     Bookmark.objects.create(user_id=user, recipe_id=recipe).save
-        #     return Response({'message': 'CREATE_BOOKMARK'}, status=status.HTTP_200_OK)
 
         
