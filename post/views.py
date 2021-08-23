@@ -6,15 +6,15 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
 
-from .serializers import PostSerializer
-from .models import Post
+from .serializers import PostImageSerializer, PostSerializer
+from .models import Post, PostImage
 
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.decorators import parser_classes
 from drf_yasg import openapi
 
 class PostList(APIView): 
-    photo=openapi.Parameter(
+    image=openapi.Parameter(
                             name="image",
                             in_=openapi.IN_FORM,
                             type=openapi.TYPE_ARRAY,
@@ -23,7 +23,7 @@ class PostList(APIView):
                             description="Document"
                             )
     parser_classes = (MultiPartParser,)
-    @swagger_auto_schema(request_body=PostSerializer, manual_parameters = [photo])
+    @swagger_auto_schema(request_body=PostSerializer, manual_parameters = [image])
     def post(self, request):
         '''
         방명록 작성 API 
@@ -40,8 +40,9 @@ class PostList(APIView):
         방명록 리스트 API 
         '''
         posts = Post.objects.all()
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
+        Serializer = PostSerializer(posts, many=True)
+        print(Serializer.data)
+        return Response(Serializer.data)
     '''
     def Get: 방명록 리스트 검색 
     '''

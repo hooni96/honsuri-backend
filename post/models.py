@@ -3,16 +3,10 @@ from account.models import User
 from datetime import datetime
 from core.models import TimestampModel
 
-# def get_file_path(instance, filename):
-#     ymd_path = datetime.now().strftime("%Y/%m/%d")
-#     ext = filename.split(".")[-1]
-#     filename = "{}.{}".format(uuid4().hex, ext)
-#     return "/".join(["feeds/", ymd_path, filename])
-
 #Post Model
 class Post(TimestampModel):
     content = models.TextField(blank=True, verbose_name="방명록 내용")
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.content
@@ -22,14 +16,14 @@ class Post(TimestampModel):
         ordering=["-created_at"]
 
 class PostImage(TimestampModel):
-    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='post',blank=True, null=True)
+    post_id = models.ForeignKey(Post, related_name="photos", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='posts', blank=True, null=True)
 
     class Meta:
         db_table = "postImage"
         ordering=["created_at"]
 
-#Comment Model
+# Comment Model
 # class Comment(models.Model):
 
 # #Like Model
