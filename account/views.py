@@ -12,7 +12,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 # 회원가입
-class SignupView(CreateAPIView):
+class RegisterView(CreateAPIView):
     model = User
     serializer_class = UserCreateSerializer
     permission_classes = [
