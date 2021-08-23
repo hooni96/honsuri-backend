@@ -34,7 +34,7 @@ class RecipeMainView(APIView):
     def get(self, request):
         base = request.GET.getlist('base', None)
         # jwt_token 생기면 수정
-        user_id = int(request.GET.get('user_pk'))
+        user_id = request.GET.get('user_pk')
         
         # base에 따른 queryset 필터링
         queryset = Recipe.objects.filter(base__in=base).distinct() if base else Recipe.objects.all()
@@ -43,7 +43,7 @@ class RecipeMainView(APIView):
         # 북마크 추가파트
         recipe_list = []
         for each in serializer.data:
-            if user_id in each['bookmark']:
+            if int(user_id) in each['bookmark']:
                 each['bookmark'] = True
             else:
                 each['bookmark'] = False
