@@ -41,11 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'drf_yasg',
+    'ckeditor',
     'corsheaders', # CORS 관련 추가
     'honsuri',
+    'recipe',
+    'core',
+    'account',
     'music',
     'mbti',
-    'core',
 ]
 
 MIDDLEWARE = [
@@ -91,6 +94,8 @@ DATABASES = my_settings.DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = 'account.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
