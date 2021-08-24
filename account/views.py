@@ -1,3 +1,4 @@
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from .models import User
 from .serializers import UserCreateSerializer
@@ -11,14 +12,16 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-# 회원가입
 class RegisterView(CreateAPIView):
     model = User
     serializer_class = UserCreateSerializer
     permission_classes = [
         AllowAny
     ]
-
+    '''
+    회원가입 api
+    ---
+    '''
     def post(self, request, formet=None):
         serializer = UserCreateSerializer(data=request.data)
         if serializer.is_valid():

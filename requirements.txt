@@ -24,6 +24,7 @@ mysqlclient==2.0.3
 newrelic==6.8.0.163
 packaging==21.0
 pafy==0.5.5
+Pillow==8.3.1
 pluggy==0.13.1
 py==1.10.0
 pyglet==1.5.18
