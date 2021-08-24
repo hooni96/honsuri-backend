@@ -54,19 +54,30 @@ class PostList(APIView):
 
         return Response(Serializer.data)
 
-# class LikeView(ModelViewSet): 
-#     '''
-#     def Post: 좋아요 누르기/취소
-#     ---
-#     '''
-#     queryset = Like.objects.all() 
-#     serializer_class = PostSerializer 
+#방명록 삭제 시작
+class PostDelete(APIView): 
+    @swagger_auto_schema(manual_parameters = [])
+    def delete(self, request, pk):
+        '''
+        방명록 게시물 삭제 
+        '''
+        posts = Post.objects.get(pk=pk)
+        posts.delete()
+        return Response("delete", status=status.HTTP_200_OK)
 
-# class CommentView(ModelViewSet): 
+# class CommentList(ModelViewSet): 
 #     '''
 #     def Post: 댓글 작성
 #     def Get: 댓글 리스트
 #     ---
 #     '''
 #     queryset = Comment.objects.all() 
+#     serializer_class = PostSerializer 
+
+# class LikeView(APIView): 
+#     '''
+#     def Post: 좋아요 누르기/취소
+#     ---
+#     '''
+#     queryset = Like.objects.all() 
 #     serializer_class = PostSerializer 

@@ -28,7 +28,12 @@ class Comment(TimestampModel):
     content = models.TextField(blank=True, verbose_name="댓글 내용")
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    def __str__(self):
+        return self.content
+    class Meta:
+        db_table = "comment"
+        verbose_name= "댓글"
+        ordering=["-created_at"]
 
 # #Like Model
 # class Like(models.Model):
