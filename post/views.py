@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
+from rest_framework import filters
 
 from .serializers import PostImageSerializer, PostSerializer
 from .models import Post, PostImage
@@ -14,6 +15,7 @@ from rest_framework.decorators import parser_classes
 from drf_yasg import openapi
 
 class PostList(APIView): 
+    # 방명록 작성 시작
     image=openapi.Parameter(
                             name="image",
                             in_=openapi.IN_FORM,
@@ -26,7 +28,7 @@ class PostList(APIView):
     @swagger_auto_schema(request_body=PostSerializer, manual_parameters = [image])
     def post(self, request):
         '''
-        방명록 작성 API 
+        방명록 작성
         '''
         serializer = PostSerializer(data=request.data, context={"request": request})
         #유효성 검사
@@ -35,17 +37,22 @@ class PostList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    #방명록 리스트 시작
+    keyword=openapi.Parameter(
+                            name="keyword",
+                            in_=openapi.IN_QUERY,
+                            type=openapi.TYPE_STRING
+                            )
+    @swagger_auto_schema(manual_parameters = [keyword])
     def get(self, request):
         '''
-        방명록 리스트 API 
+        방명록 리스트 전체 조회 및 키워드 검색 
         '''
-        posts = Post.objects.all()
+        keyword = request.GET.get('keyword', None)
+        posts = Post.objects.filter(content__contains=keyword).distinct() if keyword else Post.objects.all()
         Serializer = PostSerializer(posts, many=True)
-        print(Serializer.data)
+
         return Response(Serializer.data)
-    '''
-    def Get: 방명록 리스트 검색 
-    '''
 
 # class LikeView(ModelViewSet): 
 #     '''

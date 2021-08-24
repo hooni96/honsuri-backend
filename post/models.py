@@ -24,7 +24,11 @@ class PostImage(TimestampModel):
         ordering=["created_at"]
 
 # Comment Model
-# class Comment(models.Model):
+class Comment(TimestampModel):
+    content = models.TextField(blank=True, verbose_name="댓글 내용")
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
+    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
 # #Like Model
 # class Like(models.Model):
