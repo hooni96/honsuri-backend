@@ -46,11 +46,16 @@ INSTALLED_APPS = [
     'rest_framework_jwt',
 
     'drf_yasg',
+    'ckeditor',
     'corsheaders', # CORS 관련 추가
 
     # my app
     'honsuri',
+    'recipe',
+    'core',
     'account',
+    'music',
+    'mbti',
 ]
 
 SITE_ID = 1

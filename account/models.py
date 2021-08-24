@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
+from django.db.models.expressions import F
 
 class UserManager(BaseUserManager): # 유저를 생성할 때 사용하는 Helper 클래스
     def create_user(self, email, name, nickname, phone_number, alcohol_amount, favorite_alcohol, favorite_food, favorite_combination, password=None):
@@ -54,6 +55,7 @@ class User(AbstractBaseUser):
     phone_number = models.IntegerField()
 
     alcohol_amount = models.CharField(blank=True, null=True, max_length=32, choices=ALCOHOL)
+
     favorite_alcohol = models.CharField(max_length=40, blank=True)
     favorite_food = models.CharField(max_length=40, blank=True)
     favorite_combination = models.CharField(max_length=40, blank=True)

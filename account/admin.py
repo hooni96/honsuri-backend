@@ -24,6 +24,7 @@ class UserAdmin(BaseUserAdmin):
         ('Personal info', {'fields': ('name', 'nickname','phone_number')}),
         ('interests', {'fields': ('alcohol_amount', 'favorite_alcohol', 'favorite_food', 'favorite_combination')}),
         ('Permissions', {'fields': ('is_admin',)}),
+
     )
     search_fields = ('email',)
     ordering = ('email',)
