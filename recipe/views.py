@@ -10,7 +10,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 class RecipeMainView(APIView):
@@ -24,6 +24,9 @@ class RecipeMainView(APIView):
     base=4 와인
     base=5 과일소주
     '''
+    permission_classes = [
+        AllowAny
+    ]
     base = openapi.Parameter('base',
                             in_ = openapi.IN_QUERY,
                             type=openapi.TYPE_ARRAY,
