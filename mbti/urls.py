@@ -1,5 +1,4 @@
-from django.urls import include, path
-from rest_framework import routers  # router import
+from django.urls import path
 from .views import MbtiView  
 
 app_name = 'mbti'
