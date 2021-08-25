@@ -16,7 +16,7 @@ class Post(TimestampModel):
         ordering=["-created_at"]
 
 class PostImage(TimestampModel):
-    post_id = models.ForeignKey(Post, related_name="photos", on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name="photos", on_delete=models.CASCADE)
     image = models.ImageField(upload_to='posts', blank=True, null=True)
 
     class Meta:
@@ -26,8 +26,8 @@ class PostImage(TimestampModel):
 # Comment Model
 class Comment(TimestampModel):
     content = models.TextField(blank=True, verbose_name="댓글 내용")
-    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
         return self.content
     class Meta:

@@ -24,5 +24,5 @@ class PostSerializer(serializers.ModelSerializer):
         image_set = self.context['request'].FILES
         instance = Post.objects.create(**validated_data)
         for image_data in image_set.getlist("image"):
-            PostImage.objects.create(post_id=instance, image=image_data)
+            PostImage.objects.create(post=instance, image=image_data)
         return instance
