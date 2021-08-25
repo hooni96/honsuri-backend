@@ -15,14 +15,17 @@ class PostSerializer(serializers.ModelSerializer):
     photos = PostImageSerializer(many=True, read_only=True)
 
     class Meta:
-        # 'user_id',
         model = Post
-        fields = ( "id", "photos", "content", "created_at", )
+        fields = ( "id", "photos", "content", "created_at","user_id", )
         read_only_fields = ("id", "created")
 
     def create(self, validated_data):
+        user_id =  self.context['request'].user.pk
         image_set = self.context['request'].FILES
-        instance = Post.objects.create(**validated_data)
+        instance = Post.objects.create(
+            user_id=user_id,
+            content=validated_data['content']
+            )
         for image_data in image_set.getlist("image"):
             PostImage.objects.create(post=instance, image=image_data)
         return instance
