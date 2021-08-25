@@ -28,7 +28,7 @@ class UserManager(BaseUserManager): # 유저를 생성할 때 사용하는 Helpe
             password = password,
             name = name,
             nickname = nickname,
-            phone_number = 0,
+            phone_number = '',
             alcohol_amount = 0,
             favorite_alcohol = '',
             favorite_food = '',
@@ -38,24 +38,14 @@ class UserManager(BaseUserManager): # 유저를 생성할 때 사용하는 Helpe
         user.save(using=self._db)
         return user
 
-ALCOHOL = (
-    ('소주 0병', '소주 0병'),
-    ('소주 반병', '소주 반병'),
-    ('소주 한병', '소주 한병'),
-    ('소주 한병 반', '소주 한병 반'),
-    ('소주 두병', '소주 두병'),
-    ('소주 세병 이상', '소주 세병 이상'),
-)
-
 class User(AbstractBaseUser): 
 
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=40, unique=False)
     nickname = models.CharField(max_length=40, unique=True)
-    phone_number = models.IntegerField()
+    phone_number = models.CharField(max_length=12)
 
-    alcohol_amount = models.CharField(blank=True, null=True, max_length=32, choices=ALCOHOL)
-
+    alcohol_amount = models.FloatField(blank=True)
     favorite_alcohol = models.CharField(max_length=40, blank=True)
     favorite_food = models.CharField(max_length=40, blank=True)
     favorite_combination = models.CharField(max_length=40, blank=True)

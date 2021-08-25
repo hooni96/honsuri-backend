@@ -1,5 +1,6 @@
+from typing import AbstractSet
 from rest_framework import serializers
-from account.models import User, ALCOHOL
+from account.models import User
 from drf_yasg import openapi
 from rest_framework_jwt.settings import api_settings
 from rest_framework.validators import UniqueValidator
@@ -23,13 +24,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
         write_only=True, style={'input_type': 'password', 'placeholder': 'Password'}, validators=[validate_password])
     name = serializers.CharField(write_only=True)
     nickname = serializers.CharField(write_only=True)
-    phone_number = serializers.IntegerField(write_only=True)
-    alcohol_amount = serializers.ChoiceField(choices=ALCOHOL)
+    phone_number = serializers.CharField(write_only=True)
+    alcohol_amount = serializers.FloatField()
     favorite_alcohol = serializers.CharField()
     favorite_food = serializers.CharField()
     favorite_combination = serializers.CharField()
     token = serializers.SerializerMethodField()
-
+    
     def get_token(self, obj):
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
         jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -37,7 +38,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         payload = jwt_payload_handler(obj)
         token = jwt_encode_handler(payload)
         return token
-
+    
     def create(self, validated_data):
         user = User.objects.create(**validated_data)
         user.set_password(validated_data['password'])
@@ -47,5 +48,3 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'password', 'name', 'nickname', 'phone_number', 'alcohol_amount', 'favorite_alcohol', 'favorite_food', 'favorite_combination', 'token']
-
-    

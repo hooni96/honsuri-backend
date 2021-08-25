@@ -1,5 +1,9 @@
+from rest_framework.views import APIView
+from mysite.settings import DATABASES
 from django.http.response import JsonResponse
 from django.shortcuts import render
+from rest_framework import permissions
+from rest_framework.exceptions import AuthenticationFailed
 from .models import User
 from .serializers import UserCreateSerializer
 from django.core import serializers
@@ -19,8 +23,8 @@ class RegisterView(CreateAPIView):
         AllowAny
     ]
     '''
-    회원가입 api
-    ---
+    mbti 질문과 보기를 반환하는 api
+    ___
     '''
     def post(self, request, formet=None):
         serializer = UserCreateSerializer(data=request.data)

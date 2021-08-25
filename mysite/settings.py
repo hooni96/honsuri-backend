@@ -192,17 +192,15 @@ REST_USE_JWT = True
 SIMPLE_JWT = {
    
    # 여기는 기본 세팅값
-   
    'JWT_SECRET_KEY': SECRET_KEY,   # JWT 에 서명하는데 사용되는 시크릿키. 장고의 시크릿키가 디폴트.
    'JWT_ALGORITHM': 'HS256',       # PyJWT 에서 암호화 서명에 지원되는 알고리즘으로 마찬가지로 이것 또한 기본값.
-   'JWT_VERIFY_EXPIRATION' : True, # 토큰 만료 시간 확인. 기본값 True.
-    
+   'JWT_VERIFY_EXPIRATION' : True, # 토큰 만료 시간 확인. 기본값 True.    
+
    # 새로 커스텀한 옵션들
-   
    'JWT_ALLOW_REFRESH': True,      # 토큰 새로고침 기능 활성화. 기본값 False.
    'JWT_EXPIRATION_DELTA': timedelta(minutes=30),     # datetime.timedelta 의 만료 시간. 기본값 seconds=300. 
    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=3), # Refresh Token의 새로 고침 시간. 기본값 days=7
-   'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.custom_responses.my_jwt_response_handler'  #로그인 또는 새로 고침 후 반환되는 응답 데이터를 제어. 기본값은 {'token' : token } 인데 이건 나중에 우리가 따로 적어줄것임.
+   'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.custom_responses.my_jwt_response_handler',  #로그인 또는 새로 고침 후 반환되는 응답 데이터를 제어. 기본값은 {'token' : token } 인데 이건 나중에 우리가 따로 적어줄것임.
 }
 
 SWAGGER_SETTINGS = {
