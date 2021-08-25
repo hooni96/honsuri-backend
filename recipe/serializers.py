@@ -1,6 +1,5 @@
-from rest_framework import serializers # serializer import
-from recipe.models import * # 선언한 모델 import
-from drf_yasg import openapi
+from rest_framework import serializers
+from recipe.models import * 
 
 class BaseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,11 +20,6 @@ class AlcoholVolumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = AlcoholVolume
         fields = ("name",)
-
-# class BookmarkSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = "recipe_bookmark"
-#         fields = ("user_id","recipe_id",)
 
 class RecipeMainSerializer(serializers.ModelSerializer): 
     base = BaseSerializer(read_only=True, many=True)
