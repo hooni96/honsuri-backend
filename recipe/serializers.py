@@ -45,6 +45,23 @@ class RecipeMainSerializer(serializers.ModelSerializer):
             "bookmark",
         )
 
+class RecipeMainSerializerNotLoggedin(serializers.ModelSerializer): 
+    base = BaseSerializer(read_only=True, many=True)
+    ingredient = IngredientSerializer(read_only=True, many=True)
+    alcohol_volume = FlavorSerializer(read_only=True, many=True)
+    flavor = AlcoholVolumeSerializer(read_only=True, many=True)
+    class Meta:
+        model = Recipe  # 모델 설정
+        fields = (
+            "id",
+            "name",
+            "photo",
+            "base",
+            "ingredient",
+            "alcohol_volume",
+            "flavor",
+        )
+
 class RecipeDetailSerializer(serializers.ModelSerializer): 
     base = BaseSerializer(read_only=True, many=True)
     ingredient = IngredientSerializer(read_only=True, many=True)
@@ -65,4 +82,25 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
             "alcohol_volume",
             "flavor",
             "bookmark",
+        )
+
+class RecipeDetailSerializerNotLoggedin(serializers.ModelSerializer): 
+    base = BaseSerializer(read_only=True, many=True)
+    ingredient = IngredientSerializer(read_only=True, many=True)
+    alcohol_volume = FlavorSerializer(read_only=True, many=True)
+    flavor = AlcoholVolumeSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Recipe  # 모델 설정
+        fields = (
+            "id",
+            "name",
+            "photo",
+            "how_to_mix",
+            "detail_contents",
+            "youtube_link",
+            "base",
+            "ingredient",
+            "alcohol_volume",
+            "flavor",
         )
