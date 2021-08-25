@@ -9,6 +9,10 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
 class RecipeMainView(APIView):
     '''
     레시피 메인에 레시피 리스트 반환하는 API
@@ -76,8 +80,8 @@ class RecipeDetailView(APIView):
 
 # user_id는 jwt token에서 받아오도록 수정할 예정
 class BookmarkView(APIView): 
-    user_pk = openapi.Parameter('user_pk', openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
-    @swagger_auto_schema(manual_parameters=[user_pk])
+    @permission_classes((IsAuthenticated, ))
+    @authentication_classes((JSONWebTokenAuthentication,))
     def post(self, request, pk):
         '''
         북마크가 존재하면 삭제, 없으면 생성
@@ -86,8 +90,7 @@ class BookmarkView(APIView):
         user_id는 jwt_token 으로 받아올 예정(이지만 아직 jwt_token 기능이 없어서 query로 받는 중)
         '''
         recipe = get_object_or_404(Recipe, pk=pk)
-        
-        user_id = int(request.GET.get('user_pk'))
+        user_id = request.user.pk
         user = User.objects.get(id = user_id)
 
         if user in recipe.bookmark.all():
