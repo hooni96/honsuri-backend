@@ -6,7 +6,7 @@ from core.models import TimestampModel
 #Post Model
 class Post(TimestampModel):
     content = models.TextField(blank=True, verbose_name="방명록 내용")
-    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.content
@@ -35,7 +35,6 @@ class Comment(TimestampModel):
         verbose_name= "댓글"
         ordering=["-created_at"]
 
-# #Like Model
 # class Like(models.Model):
 
 
