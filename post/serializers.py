@@ -29,3 +29,8 @@ class PostSerializer(serializers.ModelSerializer):
         for image_data in image_set.getlist("image"):
             PostImage.objects.create(post=instance, image=image_data)
         return instance
+
+class PostUpdateSerializer(serializers.ModelSerializer):  
+    class Meta:
+        model = Post
+        fields = ("content",)

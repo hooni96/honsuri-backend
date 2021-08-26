@@ -5,7 +5,7 @@ from rest_framework import status
 from django.http import Http404
 from rest_framework import filters
 
-from .serializers import PostImageSerializer, PostSerializer
+from .serializers import PostImageSerializer, PostSerializer, PostUpdateSerializer
 from .models import Post, PostImage
 
 from rest_framework.parsers import MultiPartParser
@@ -16,6 +16,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
+from django.utils import timezone
 
 class PostList(APIView): 
     permission_classes = [AllowAny]
@@ -50,7 +52,7 @@ class PostList(APIView):
         else:
             return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-class PostDelete(APIView): 
+class PostDetail(APIView): 
     def delete(self, request, pk):
         '''
         방명록 게시물 삭제 
@@ -62,6 +64,20 @@ class PostDelete(APIView):
         else:
             return Response("Invalid", status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(request_body=PostUpdateSerializer)
+    def patch(self, request, pk): # 인스타처럼 이미지는 수정 불가능
+        '''
+        방명록 게시물 업데이트
+        '''
+        user_id = request.user.pk
+        if Post.objects.get(id=pk, user_id=user_id):
+            update_post = Post.objects.get(id=pk)
+            update_post.content = request.data['content']
+            update_post.updated_at = timezone.now()
+            update_post.save()
+            return Response("post updated", status=status.HTTP_200_OK)
+        else:
+            return Response("Invalid", status=status.HTTP_400_BAD_REQUEST)
 
 # class CommentList(ModelViewSet): 
 #     '''
