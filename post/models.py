@@ -28,7 +28,8 @@ class PostImage(TimestampModel):
 class Comment(TimestampModel):
     content = models.TextField(blank=True, verbose_name="댓글 내용")
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.content
     class Meta:

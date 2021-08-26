@@ -122,6 +122,7 @@ class LikePostView(APIView):
 # 덧글 API
 # ---------------------------------------------------------------------------------------
 class CommentPost(APIView): 
+    permission_classes = [AllowAny]
     @swagger_auto_schema(request_body=CommentSerializer)
     def post(self, request):
         '''
@@ -135,19 +136,21 @@ class CommentPost(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CommentGet(APIView): 
-    @swagger_auto_schema(manual_parameters = [])
+    permission_classes = [AllowAny]
     def get(self, request, post_id):
         #댓글 리스트 시작
         '''
         방명록 리스트 전체 조회 및 키워드 검색 
         '''
-        comments = Comment.objects.get(post=post_id)
-        Serializer = CommentSerializer(comments, many=True)
+        post_id = request.GET.get('post_id')
+        comments = Comment.objects.filter(post=post_id)
+        serializer = CommentSerializer(comments, many=True)
 
-        return Response(Serializer.data)
+        return Response(serializer.data)
 
 #방명록 삭제 시작
 class CommentDelete(APIView): 
+    permission_classes = [AllowAny]
     @swagger_auto_schema(manual_parameters = [])
     def delete(self, request, pk):
         '''
