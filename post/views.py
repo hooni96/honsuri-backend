@@ -78,9 +78,9 @@ class PostDetail(APIView):
         user_id = request.user.pk
         if Post.objects.get(id=pk, user_id=user_id):
             Post.objects.get(id=pk).delete()
-            return Response("post deleted", status=status.HTTP_200_OK)
+            return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
         else:
-            return Response("Invalid", status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(request_body=PostUpdateSerializer)
     def patch(self, request, pk): # 인스타처럼 이미지는 수정 불가능
@@ -121,42 +121,57 @@ class LikePostView(APIView):
 # ---------------------------------------------------------------------------------------
 # 덧글 API
 # ---------------------------------------------------------------------------------------
-class CommentPost(APIView): 
+class CommentGetPost(APIView): 
     permission_classes = [AllowAny]
-    @swagger_auto_schema(request_body=CommentSerializer)
-    def post(self, request):
+    @swagger_auto_schema(tags=['comment'])
+    def get(self, request, post_id):
+        '''
+        POST ID로 댓글 전체 읽어오기
+        '''
+        comments = Comment.objects.filter(post=post_id)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(request_body=CommentSerializer, tags=['comment'])
+    def post(self, request, post_id):
         '''
         댓글 작성
         '''
-        serializer = CommentSerializer(data=request.data, context={"request": request})
-        #유효성 검사
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated: 
+            Comment.objects.create(
+                    user_id = request.user.pk,
+                    post_id = post_id,
+                    content = request.data['content']
+                ).save
+            return Response({'message': 'POST_SUCCESS'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'message': 'NOT_LOGGEDIN'}, status=status.HTTP_400_BAD_REQUEST)
 
-class CommentGet(APIView): 
-    permission_classes = [AllowAny]
-    def get(self, request, post_id):
-        #댓글 리스트 시작
-        '''
-        방명록 리스트 전체 조회 및 키워드 검색 
-        '''
-        post_id = request.GET.get('post_id')
-        comments = Comment.objects.filter(post=post_id)
-        serializer = CommentSerializer(comments, many=True)
-
-        return Response(serializer.data)
-
-#방명록 삭제 시작
 class CommentDelete(APIView): 
-    permission_classes = [AllowAny]
-    @swagger_auto_schema(manual_parameters = [])
-    def delete(self, request, pk):
+    @swagger_auto_schema(tags=['comment'])
+    def delete(self, request, comment_id):
         '''
-        방명록 게시물 삭제 
+        덧글 id 입력받아 삭제 
         '''
-        comments = Comment.objects.get(pk=pk)
-        comments.delete()
-        return Response("comment delete", status=status.HTTP_200_OK)
+        user_id = request.user.pk
+        if Comment.objects.get(id=comment_id, user_id=user_id): # 본인 덧글이면
+            Comment.objects.get(id=comment_id).delete()
+            return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(request_body=CommentSerializer, tags=['comment'])
+    def patch(self, request, comment_id): 
+        '''
+        방명록 게시물 업데이트
+        '''
+        user_id = request.user.pk
+        if Comment.objects.get(id=comment_id, user_id=user_id): # 본인 덧글이면
+            update_comment = Comment.objects.get(id=comment_id)
+            update_comment.content = request.data['content']
+            update_comment.updated_at = timezone.now()
+            update_comment.save()
+            return Response({'message': 'UPDATED'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
 

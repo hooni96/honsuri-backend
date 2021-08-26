@@ -44,7 +44,3 @@ class LikePost(models.Model):
 
     class Meta:
         db_table = "likeposts"
-
-
-
-# class Report(models.Model):
