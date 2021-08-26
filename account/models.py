@@ -43,7 +43,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=40, unique=False)
     nickname = models.CharField(max_length=40, unique=True)
-    phone_number = models.CharField(max_length=12)
+    phone_number = models.CharField(max_length=12, unique=False)
 
     alcohol_amount = models.FloatField(blank=True)
     favorite_alcohol = models.CharField(max_length=40, blank=True)

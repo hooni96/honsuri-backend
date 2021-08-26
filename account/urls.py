@@ -6,6 +6,5 @@ app_name = 'account'
 
 urlpatterns = [
     path('account/register/', views.RegisterView.as_view()),
-    path('account/login/', obtain_jwt_token),
-    path('account/logout/', refresh_jwt_token),
+    path('account/login/', views.Login.as_view()),
     ]
