@@ -6,7 +6,7 @@ from django.http import Http404
 from rest_framework import filters
 from rest_framework import generics
 
-from .serializers import PostImageSerializer, PostSerializer, PostUpdateSerializer, LikeSerializer
+from .serializers import PostImageSerializer, PostSerializer, PostUpdateSerializer, LikeSerializer, PostLikeSerializer
 from .models import *
 
 from rest_framework.parsers import MultiPartParser
@@ -27,11 +27,28 @@ class PostList(APIView):
     def get(self, request):
         '''
         방명록 리스트 전체 조회 및 키워드 검색 API
-        '''
+        '''       
+        # keyword에 따른 queryset 필터링
         keyword = request.GET.get('keyword', None)
-        posts = Post.objects.filter(content__contains=keyword).distinct() if keyword else Post.objects.all()
-        Serializer = PostSerializer(posts, many=True)
-        return Response(Serializer.data)
+        queryset = Post.objects.filter(content__contains=keyword).distinct() if keyword else Post.objects.all()
+        serializer = PostSerializer(queryset, many=True)
+
+        post_list = []
+        
+        # 로그인 여부에 따른 좋아요 여부 추가파트
+        if request.user.is_authenticated: # 로그인 되어 있을 경우
+            user_id = request.user.pk
+            serializer = PostLikeSerializer(queryset, many=True)
+            for each in serializer.data:
+                each['like_count'] = LikePost.objects.filter(post_id=each['id']).count()
+
+                each['likepost'] = True if int(user_id) in each['likepost'] else False
+                post_list.append(each)
+        else:
+            for each in serializer.data:
+                each['like_count'] = LikePost.objects.filter(post_id=each['id']).count()
+                post_list.append(each)            
+        return Response(post_list)
 
 
     image=openapi.Parameter(name="image", in_=openapi.IN_FORM, type=openapi.TYPE_ARRAY, 
@@ -80,15 +97,6 @@ class PostDetail(APIView):
         else:
             return Response("Invalid", status=status.HTTP_400_BAD_REQUEST)
 
-# class CommentList(ModelViewSet): 
-#     '''
-#     def Post: 댓글 작성
-#     def Get: 댓글 리스트
-#     ---
-#     '''
-#     queryset = Comment.objects.all() 
-#     serializer_class = PostSerializer 
-
 class LikePostView(APIView):
     model = LikePost
     serializer_class = LikeSerializer
@@ -109,11 +117,3 @@ class LikePostView(APIView):
         delete_post = LikePost.objects.get(post_id=pk, user_id=request.user.pk)
         delete_post.delete()
         return Response({'message': 'DELETE_LIKE_POST'}, status.HTTP_200_OK)
-
-    # def get(self, request, pk, format=None):
-    #     '''
-    #     로그인 되어있을 때 POST 좋아요 여부 반환
-    #     '''
-    #     queryset = LikePost.objects.filter(user_id=request.user.pk, post_id=pk)
-    #     serializer = LikeSerializer(queryset, many=True)
-    #     return Response(serializer.data)

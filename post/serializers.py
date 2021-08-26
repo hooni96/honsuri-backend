@@ -13,13 +13,13 @@ class PostImageSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):  
     photos = PostImageSerializer(many=True, read_only=True)
-
+    
     class Meta:
         model = Post
         fields = ( "id", "photos", "content", "created_at","user_id", )
         read_only_fields = ("id", "created")
         # 좋아요 추가
-        extra_kwargs = {'likeproduct': {'required': False}}
+        extra_kwargs = {'likepost': {'required': False}}
 
     def create(self, validated_data):
         user_id =  self.context['request'].user.pk
@@ -42,3 +42,11 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = LikePost
         fields =['id', 'user_id', 'post_id']
+
+class PostLikeSerializer(serializers.ModelSerializer):  
+    photos = PostImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Post
+        fields = ( "id", "photos", "content", "created_at","user_id","likepost", )
+        read_only_fields = ("id", "created")
