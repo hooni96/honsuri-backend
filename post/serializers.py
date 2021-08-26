@@ -18,6 +18,8 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ( "id", "photos", "content", "created_at","user_id", )
         read_only_fields = ("id", "created")
+        # 좋아요 추가
+        extra_kwargs = {'likeproduct': {'required': False}}
 
     def create(self, validated_data):
         user_id =  self.context['request'].user.pk
@@ -34,3 +36,9 @@ class PostUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ("content",)
+
+class LikeSerializer(serializers.ModelSerializer):
+    post_id = PostSerializer(read_only = True)
+    class Meta:
+        model = LikeProduct
+        fields =['id', 'is_like', 'user_id', 'product_id']

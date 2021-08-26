@@ -7,6 +7,7 @@ from core.models import TimestampModel
 class Post(TimestampModel):
     content = models.TextField(blank=True, verbose_name="방명록 내용")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    likepost = models.ManyToManyField(User, through = 'LikePost', related_name = 'like_post', blank=True) 
 
     def __str__(self):
         return self.content
@@ -35,8 +36,15 @@ class Comment(TimestampModel):
         verbose_name= "댓글"
         ordering=["-created_at"]
 
-# #Like Model
-# class Like(models.Model):
+# Like Model
+class LikePost(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='like_post', blank=True, db_column='post_id')
+    is_like = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "likeposts"
+
 
 
 # class Report(models.Model):
