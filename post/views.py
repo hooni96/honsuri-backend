@@ -1,14 +1,14 @@
 #APIView 사용하기 위해 import
+from django.core import paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 from rest_framework import filters
 from rest_framework import generics
-
-from .serializers import PostImageSerializer, PostSerializer, PostUpdateSerializer, LikeSerializer, PostLikeSerializer
+from .serializers import *
 from .models import *
-
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import parser_classes
 from drf_yasg import openapi
@@ -117,3 +117,43 @@ class LikePostView(APIView):
         delete_post = LikePost.objects.get(post_id=pk, user_id=request.user.pk)
         delete_post.delete()
         return Response({'message': 'DELETE_LIKE_POST'}, status.HTTP_200_OK)
+
+# ---------------------------------------------------------------------------------------
+# 덧글 API
+# ---------------------------------------------------------------------------------------
+class CommentPost(APIView): 
+    @swagger_auto_schema(request_body=CommentSerializer)
+    def post(self, request):
+        '''
+        댓글 작성
+        '''
+        serializer = CommentSerializer(data=request.data, context={"request": request})
+        #유효성 검사
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CommentGet(APIView): 
+    @swagger_auto_schema(manual_parameters = [])
+    def get(self, request, post_id):
+        #댓글 리스트 시작
+        '''
+        방명록 리스트 전체 조회 및 키워드 검색 
+        '''
+        comments = Comment.objects.get(post=post_id)
+        Serializer = CommentSerializer(comments, many=True)
+
+        return Response(Serializer.data)
+
+#방명록 삭제 시작
+class CommentDelete(APIView): 
+    @swagger_auto_schema(manual_parameters = [])
+    def delete(self, request, pk):
+        '''
+        방명록 게시물 삭제 
+        '''
+        comments = Comment.objects.get(pk=pk)
+        comments.delete()
+        return Response("comment delete", status=status.HTTP_200_OK)
+
