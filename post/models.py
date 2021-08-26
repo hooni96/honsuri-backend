@@ -40,7 +40,6 @@ class Comment(TimestampModel):
 class LikePost(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='like_post', blank=True, db_column='post_id')
-    is_like = models.BooleanField(default=False)
 
     class Meta:
         db_table = "likeposts"

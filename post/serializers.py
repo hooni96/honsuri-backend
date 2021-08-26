@@ -1,5 +1,5 @@
 from rest_framework import serializers # serializer import
-from .models import Post, PostImage # 선언한 모델 import
+from .models import * # 선언한 모델 import
 from drf_yasg import openapi
 
 # ModelSerializer 클래스를 사용하면 Model에 정의한 필드에 해당하는 값을 Serializer 에서 사용할 수 있음
@@ -40,5 +40,5 @@ class PostUpdateSerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     post_id = PostSerializer(read_only = True)
     class Meta:
-        model = LikeProduct
-        fields =['id', 'is_like', 'user_id', 'product_id']
+        model = LikePost
+        fields =['id', 'user_id', 'post_id']

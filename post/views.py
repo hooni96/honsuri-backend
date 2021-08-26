@@ -4,9 +4,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 from rest_framework import filters
+from rest_framework import generics
 
-from .serializers import PostImageSerializer, PostSerializer, PostUpdateSerializer
-from .models import Post, PostImage
+from .serializers import PostImageSerializer, PostSerializer, PostUpdateSerializer, LikeSerializer
+from .models import *
 
 from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import parser_classes
@@ -88,10 +89,31 @@ class PostDetail(APIView):
 #     queryset = Comment.objects.all() 
 #     serializer_class = PostSerializer 
 
-# class LikeView(APIView): 
-#     '''
-#     def Post: 좋아요 누르기/취소
-#     ---
-#     '''
-#     queryset = Like.objects.all() 
-#     serializer_class = PostSerializer 
+class LikePostView(APIView):
+    model = LikePost
+    serializer_class = LikeSerializer
+
+    def post(self, request, pk, format=None):
+        '''
+        게시글의 좋아요 상태를 추가,삭제하는 api
+        
+        return : 생성, 삭제 여부 메시지
+        '''
+        if not LikePost.objects.filter(post_id=pk, user_id=request.user.pk).exists():
+            LikePost.objects.create(
+                user_id=request.user,
+                post_id=Post.objects.get(id=pk)
+            ).save
+            return Response({'message': 'CREATE_LIKE_POST'}, status.HTTP_200_OK)
+
+        delete_post = LikePost.objects.get(post_id=pk, user_id=request.user.pk)
+        delete_post.delete()
+        return Response({'message': 'DELETE_LIKE_POST'}, status.HTTP_200_OK)
+
+    # def get(self, request, pk, format=None):
+    #     '''
+    #     로그인 되어있을 때 POST 좋아요 여부 반환
+    #     '''
+    #     queryset = LikePost.objects.filter(user_id=request.user.pk, post_id=pk)
+    #     serializer = LikeSerializer(queryset, many=True)
+    #     return Response(serializer.data)
