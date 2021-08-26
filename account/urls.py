@@ -4,6 +4,5 @@ from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh
 from . import views
 urlpatterns = [
     path('register/', views.RegisterView.as_view()),
-    path('login/', obtain_jwt_token),
-    path('logout/', refresh_jwt_token),
+    path('login/', views.Login.as_view()),
     ]
