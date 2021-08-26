@@ -3,7 +3,7 @@ from django.core import paginator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
 from rest_framework import filters
@@ -66,6 +66,8 @@ class PostList(APIView):
         except EmptyPage:
             posts_page = paginator.page(paginator.num_pages)
         Serializer = PostSerializer(posts_page, many=True)
+        print(Serializer.data)
+
 
         return Response(Serializer.data)
 
