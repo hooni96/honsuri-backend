@@ -7,42 +7,41 @@ from rest_framework.response import Response
 from .serializers import *
 
 class MyFavoriteView(APIView): 
+  def get(self, request):
     '''
     내가 북마크한 레시피 api
     ---
     결과: 좋아요한 레시피(아이디,사진,이름,태그요소들) 반환
     '''
-    def get(self, request):
-      user_id = request.user.pk
+    user_id = request.user.pk
 
-      queryset = Recipe.objects.filter(bookmark__in=[user_id])
-      serializer = MyFavoriteSerializer(queryset, many=True) 
+    queryset = Recipe.objects.filter(bookmark__in=[user_id])
+    serializer = MyFavoriteSerializer(queryset, many=True) 
 
-      return Response(serializer.data)
+    return Response(serializer.data)
 
 class MyPageView(APIView): 
-    '''
-    나의 정보 api
-    ---
-    결과: 나의정보(이메일,이름,닉네임,연락처), 관심정보(주량,최애술,최애안주,최애콤비) 반환
-    '''
-    def get(self, request):
+  def get(self, request):
+      '''
+      나의 정보 api
+      ---
+      결과: 나의정보(이메일,이름,닉네임,연락처), 관심정보(주량,최애술,최애안주,최애콤비) 반환
+      '''
       user_id = request.user.pk
       queryset = User.objects.filter(id = user_id)
       serializer = UserSerializer(queryset, many=True) 
 
       return Response(serializer.data[0])
 
-
-class UserDeleteView(APIView):
-    '''
-    유저 id 받아서 회원탈퇴 api
-    ---
-    '''
-    def delete(self, request, pk):
+  def delete(self, request):
+      '''
+      유저 id 받아서 회원탈퇴 api
+      ---
+      결과: 메시지 반환
+      '''
       user_id = request.user.pk
-      if User.objects.get(id=pk, user_id=user_id):
-        User.objects.get(id=pk).delete()
+      try:
+        User.objects.get(id = user_id).delete()
         return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
-      else:
+      except:
         return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
