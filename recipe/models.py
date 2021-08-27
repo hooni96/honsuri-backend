@@ -101,11 +101,3 @@ class RecipeFlavor(TimestampModel):
 
     class Meta:
         db_table = 'recipe_flavor'
-
-
-# class Bookmark(TimestampModel):
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
-#     recipe_id = models.ForeignKey(Recipe, on_delete=models.CASCADE, db_column='recipe_id')
-
-#     class Meta:
-#         db_table = "bookmark"

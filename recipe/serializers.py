@@ -1,6 +1,5 @@
-from rest_framework import serializers # serializer import
-from recipe.models import * # 선언한 모델 import
-from drf_yasg import openapi
+from rest_framework import serializers
+from recipe.models import * 
 
 class BaseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,11 +21,6 @@ class AlcoholVolumeSerializer(serializers.ModelSerializer):
         model = AlcoholVolume
         fields = ("name",)
 
-# class BookmarkSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = "recipe_bookmark"
-#         fields = ("user_id","recipe_id",)
-
 class RecipeMainSerializer(serializers.ModelSerializer): 
     base = BaseSerializer(read_only=True, many=True)
     ingredient = IngredientSerializer(read_only=True, many=True)
@@ -43,6 +37,23 @@ class RecipeMainSerializer(serializers.ModelSerializer):
             "alcohol_volume",
             "flavor",
             "bookmark",
+        )
+
+class RecipeMainSerializerNotLoggedin(serializers.ModelSerializer): 
+    base = BaseSerializer(read_only=True, many=True)
+    ingredient = IngredientSerializer(read_only=True, many=True)
+    alcohol_volume = FlavorSerializer(read_only=True, many=True)
+    flavor = AlcoholVolumeSerializer(read_only=True, many=True)
+    class Meta:
+        model = Recipe  # 모델 설정
+        fields = (
+            "id",
+            "name",
+            "photo",
+            "base",
+            "ingredient",
+            "alcohol_volume",
+            "flavor",
         )
 
 class RecipeDetailSerializer(serializers.ModelSerializer): 
@@ -65,4 +76,25 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
             "alcohol_volume",
             "flavor",
             "bookmark",
+        )
+
+class RecipeDetailSerializerNotLoggedin(serializers.ModelSerializer): 
+    base = BaseSerializer(read_only=True, many=True)
+    ingredient = IngredientSerializer(read_only=True, many=True)
+    alcohol_volume = FlavorSerializer(read_only=True, many=True)
+    flavor = AlcoholVolumeSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Recipe  # 모델 설정
+        fields = (
+            "id",
+            "name",
+            "photo",
+            "how_to_mix",
+            "detail_contents",
+            "youtube_link",
+            "base",
+            "ingredient",
+            "alcohol_volume",
+            "flavor",
         )

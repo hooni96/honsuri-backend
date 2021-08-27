@@ -20,10 +20,11 @@ class UserAdmin(BaseUserAdmin):
     )
 
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2')}
-         ),
+        (None, {'fields': ('email', 'password1', 'password2')}),
+        ('Personal info', {'fields': ('name', 'nickname','phone_number')}),
+        ('interests', {'fields': ('alcohol_amount', 'favorite_alcohol', 'favorite_food', 'favorite_combination')}),
+        ('Permissions', {'fields': ('is_admin',)}),
+
     )
     search_fields = ('email',)
     ordering = ('email',)
