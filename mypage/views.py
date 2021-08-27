@@ -31,13 +31,11 @@ class MyPostView(APIView):
         # 로그인 여부에 따른 좋아요 여부 추가파트
         if request.user.is_authenticated: # 로그인 되어 있을 경우
             user_id = request.user.pk
-            queryset = Post.objects.filter(user_id=[user_id])
+            queryset = Post.objects.filter(user_id=user_id)
             serializer = PostSerializer(queryset, many=True)
             for each in serializer.data:
                 each['like_count'] = LikePost.objects.filter(post_id=each['id']).count()
                 each['comment_count'] = Comment.objects.filter(post_id=each['id']).count()
-
-                each['likepost'] = True if int(user_id) in each['likepost'] else False
                 post_list.append(each)           
         return Response(post_list)
 

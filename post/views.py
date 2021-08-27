@@ -2,9 +2,7 @@
 from django.core import paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import serializers, status
-from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import status
 from django.http import Http404
 from rest_framework import filters
 from rest_framework import generics
@@ -18,6 +16,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from django.utils import timezone
 
@@ -62,26 +61,6 @@ class PostList(APIView):
         '''
         방명록 작성 API
         '''
-        keyword = request.GET.get('keyword', None)
-        page = request.GET.get('page', None)
-        posts = Post.objects.filter(content__contains=keyword).distinct() if keyword else Post.objects.all()
-        paginator = Paginator(posts, 9)
-        try:
-            posts_page = paginator.page(page)
-        except PageNotAnInteger:
-            posts_page = paginator.page(1)
-        except EmptyPage:
-            posts_page = paginator.page(paginator.num_pages)
-        Serializer = PostSerializer(posts_page, many=True)
-        print(Serializer.data)
-
-
-        return Response(Serializer.data)
-
-#방명록 삭제 시작
-class PostDelete(APIView): 
-    @swagger_auto_schema(manual_parameters = [])
-    def delete(self, request, id):
         if request.user.is_authenticated:
             user_id = request.user.pk
             serializer = PostSerializer(data=request.data, context={"request": request})

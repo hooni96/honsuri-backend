@@ -11,21 +11,13 @@ class PostImageSerializer(serializers.ModelSerializer):
         model = PostImage
         fields = ("image",)
 
-class CommentSerializer(serializers.ModelSerializer):
-  
-    class Meta:
-        model = Comment
-        fields = ("id", "post", "content", "created_at", )
-        read_only_fields = ("id", "created")
-
-class PostSerializer(serializers.ModelSerializer): 
+class PostSerializer(serializers.ModelSerializer):  
     photos = PostImageSerializer(many=True, read_only=True)
-
+    
     class Meta:
         model = Post
-    
-        fields = ( "id", "photos", "content", "created_at", "user_id", )
-        read_only_fields = ("id", "created_at")
+        fields = ( "id", "photos", "content", "created_at","user_id", )
+        read_only_fields = ("id", "created")
         # 좋아요 추가
         extra_kwargs = {'likepost': {'required': False}}
 
@@ -39,7 +31,6 @@ class PostSerializer(serializers.ModelSerializer):
         for image_data in image_set.getlist("image"):
             PostImage.objects.create(post=instance, image=image_data)
         return instance
-
 
 class PostUpdateSerializer(serializers.ModelSerializer):  
     class Meta:
@@ -65,4 +56,3 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ("id", "post", "content", "created_at",)
         read_only_fields = ("id", "created", "post")
-
