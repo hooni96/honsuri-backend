@@ -116,9 +116,9 @@ class PostDetail(APIView):
             update_post.content = request.data['content']
             update_post.updated_at = timezone.now()
             update_post.save()
-            return Response("post updated", status=status.HTTP_200_OK)
+            return Response({'message': 'POST_UPDATED'}, status=status.HTTP_200_OK)
         else:
-            return Response("Invalid", status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'FAILED'}, status=status.HTTP_400_BAD_REQUEST)
 
 class LikePostView(APIView):
     model = LikePost
@@ -186,7 +186,7 @@ class CommentDelete(APIView):
     @swagger_auto_schema(request_body=CommentSerializer, tags=['comment'])
     def patch(self, request, comment_id): 
         '''
-        방명록 게시물 업데이트
+        댓글 업데이트
         '''
         user_id = request.user.pk
         if Comment.objects.get(id=comment_id, user_id=user_id): # 본인 덧글이면

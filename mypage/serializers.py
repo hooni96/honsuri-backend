@@ -5,6 +5,7 @@ from recipe.serializers import BaseSerializer, IngredientSerializer, FlavorSeria
 from post.serializers import *
 from post.models import *
 from account.models import User 
+from django.contrib.auth import authenticate
 
 #내가쓴글
 class MyPostSerializer(serializers.ModelSerializer):
@@ -41,4 +42,19 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'name', 'nickname', 'phone_number', 
+        'alcohol_amount', 'favorite_alcohol', 'favorite_food', 'favorite_combination']
+
+class PasswordSerializer(serializers.ModelSerializer):
+    new_password1 = serializers.CharField(max_length=128, write_only=True)
+    new_password2 = serializers.CharField(max_length=128, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['password','new_password1','new_password2']
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['name', 'nickname', 'phone_number', 
         'alcohol_amount', 'favorite_alcohol', 'favorite_food', 'favorite_combination']
