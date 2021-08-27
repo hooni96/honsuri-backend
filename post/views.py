@@ -176,4 +176,3 @@ class CommentDelete(APIView):
             return Response({'message': 'UPDATED'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
-

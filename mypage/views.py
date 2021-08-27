@@ -6,12 +6,38 @@ from account.models import User
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import *
-
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import authenticate
 
+class MyPostView(APIView):
+    '''
+    내가 북마크한 레시피 api
+    ---
+    결과: 좋아요한 레시피(아이디,사진,이름,태그요소들) 반환
+    '''
+
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        '''
+        방명록 리스트 전체 조회 및 키워드 검색 API
+        '''       
+        # keyword에 따른 queryset 필터링
+        post_list = []
+        
+        # 로그인 여부에 따른 좋아요 여부 추가파트
+        if request.user.is_authenticated: # 로그인 되어 있을 경우
+            user_id = request.user.pk
+            queryset = Post.objects.filter(user_id=user_id)
+            serializer = PostSerializer(queryset, many=True)
+            for each in serializer.data:
+                each['like_count'] = LikePost.objects.filter(post_id=each['id']).count()
+                each['comment_count'] = Comment.objects.filter(post_id=each['id']).count()
+                post_list.append(each)           
+        return Response(post_list)
 
 class MyFavoriteView(APIView): 
   def get(self, request):
