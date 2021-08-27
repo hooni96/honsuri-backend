@@ -7,4 +7,5 @@ app_name = 'mypage'
 urlpatterns = [
     path('mypage', MyPageView.as_view(), name='mypage'),
     path('mypage/my-favorite', MyFavoriteView.as_view(), name='myfavorite'),
+    path('mypage/password', PasswordView.as_view(), name='password'),
 ]
