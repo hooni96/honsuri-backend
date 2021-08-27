@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'corsheaders', # CORS 관련 추가
 
     # my app
+    'mypage',
     'honsuri',
     'post',
     'recipe',

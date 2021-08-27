@@ -39,12 +39,13 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     path('', include('account.urls')),
     path('', include('recipe.urls')), # recipe/urls.py 사용
     path('', include('music.urls')),
     path('', include('mbti.urls')), # mbti/urls.py 사용
     path('', include('post.urls')), # post/urls.py 사용
+    path('', include('mypage.urls')), 
 ]
 
 # 이건 디버그일때만 swagger 문서가 보이도록 해주는 설정. 
@@ -52,5 +53,5 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += [
         re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name="schema-json"),
-        re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-        re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),    ]
+        re_path(r'^swagger$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+        re_path(r'^redoc$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),    ]
