@@ -34,21 +34,6 @@ class PasswordSerializer(serializers.ModelSerializer):
     new_password1 = serializers.CharField(max_length=128, write_only=True)
     new_password2 = serializers.CharField(max_length=128, write_only=True)
 
-    def validate(self, validated_data):
-        # 현재 비밀번호 확인
-        user_id = self.context['request'].user.pk
-        user_email = User.objects.filter(id = user_id).values_list('email',)[0]
-        password = validated_data['password']
-        user = authenticate(email=user_email, password=password)
-
-        # 현재 비밀번호가 맞지 않으면
-        if user is None:
-            return {'id': 'None'}
-        else:
-            # 새로운 비밀번호 등록
-            user.set_password(validated_data['new_password1'])
-            user.save()
-            return user
     class Meta:
         model = User
         fields = ['password','new_password1','new_password2']
