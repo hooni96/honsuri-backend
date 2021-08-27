@@ -8,6 +8,7 @@ from .serializers import *
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+
 class MyFavoriteView(APIView): 
     '''
     내가 북마크한 레시피 api
@@ -42,13 +43,14 @@ class PasswordView(APIView):
     파라미터: request body로 현재 비밀번호, 새 비밀번호, 새 비밀번호(확인) 입력
     결과: 성공여부 메시지 반환
     '''
-    @swagger_auto_schema(request_body=EmailFindSerializer)
+    @swagger_auto_schema(request_body=PasswordSerializer)
     def patch(self, request):
-      user_id = request.user.pk
-      # 로그인 기능 이용해서 있는 비밀번호인지 확인하고
-      serializer = PasswordSerializer(data = request.data)
-      # 회원가입 기능 이용해서 새로운 비밀번호 등록
-      queryset = User.objects.filter(id = user_id)
-      serializer = UserSerializer(queryset, many=True) 
+      if request.data['new_password1'] == request.data['new_password2']:
+        serializer = PasswordSerializer(data = request.data, context={'request': request})
 
-      return Response(serializer.data[0])
+        if serializer.is_valid():
+          serializer.save()
+          return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+      else:
+        return Response({'message': 'PASSWORDS ARE NOT MATCHING'}, status=status.HTTP_400_BAD_REQUEST)

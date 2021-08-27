@@ -2,6 +2,7 @@ from rest_framework import serializers
 from recipe.models import * 
 from recipe.serializers import BaseSerializer, IngredientSerializer, FlavorSerializer, AlcoholVolumeSerializer
 from account.models import User 
+from django.contrib.auth import authenticate
 
 class MyFavoriteSerializer(serializers.ModelSerializer): 
     base = BaseSerializer(read_only=True, many=True)
@@ -30,43 +31,27 @@ class UserSerializer(serializers.ModelSerializer):
 
 # ---------------------------------------------------------------------------------------------------------------------
 class PasswordSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=128, write_only=True)
-    password = serializers.CharField(validators=[validate_password])
-    new_password1 = serializers.CharField(validators=[validate_password])
-    new_password2 = serializers.CharField(validators=[validate_password])
+    new_password1 = serializers.CharField(max_length=128, write_only=True)
+    new_password2 = serializers.CharField(max_length=128, write_only=True)
 
-    def validate(self, data):
-        user_id =  self.context['request'].user.pk
-        email = data.get("email")
-        password = data.get("password", None)
+    def validate(self, validated_data):
+        # 현재 비밀번호 확인
+        user_id = self.context['request'].user.pk
+        user_email = User.objects.filter(id = user_id).values_list('email',)[0]
+        password = validated_data['password']
+        user = authenticate(email=user_email, password=password)
 
-        user = authenticate(email=email, password=password)
-
+        # 현재 비밀번호가 맞지 않으면
         if user is None:
-            return {'id': 'None','email':email}
-        try:
-            payload = JWT_PAYLOAD_HANDLER(user)
-            jwt_token = JWT_ENCODE_HANDLER(payload)
-            update_last_login(None, user)
-
-        except User.DoesNotExist:
-            raise serializers.ValidationError(
-                'User with given username and password does not exist'
-            )
-        return {
-            'id':user.id,
-            'token': jwt_token
-        }
-
-    def create(self, validated_data):
-        user = User.objects.create(**validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
-
+            return {'id': 'None'}
+        else:
+            # 새로운 비밀번호 등록
+            user.set_password(validated_data['new_password1'])
+            user.save()
+            return user
     class Meta:
         model = User
-        fields = ['email', 'password', 'new_password1', 'new_password2']
+        fields = ['password','new_password1','new_password2']
 
 
     
