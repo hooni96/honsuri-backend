@@ -76,8 +76,13 @@ class UserLoginSerializer(serializers.Serializer):
             'token': jwt_token
         }
 
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id',)
+
+class EmailFindSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['name', 'phone_number','email']
+        read_only_fields = ['email']
