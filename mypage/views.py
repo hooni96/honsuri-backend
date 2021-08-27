@@ -53,7 +53,6 @@ class MyPageView(APIView):
         update_user.favorite_combination = request.data['favorite_combination']
         update_user.save()
         return Response("user updated", status=status.HTTP_200_OK)
-
       except:
         return Response("Invalid", status=status.HTTP_400_BAD_REQUEST)
 
@@ -70,22 +69,6 @@ class MyPageView(APIView):
       except:
         return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
 
-"""
-    @swagger_auto_schema(request_body=PostUpdateSerializer)
-    def patch(self, request, pk): # 인스타처럼 이미지는 수정 불가능
-        '''
-        방명록 게시물 업데이트
-        '''
-        user_id = request.user.pk
-        if Post.objects.get(id=pk, user_id=user_id):
-            update_post = Post.objects.get(id=pk)
-            update_post.content = request.data['content']
-            update_post.updated_at = timezone.now()
-            update_post.save()
-            return Response("post updated", status=status.HTTP_200_OK)
-        else:
-            return Response("Invalid", status=status.HTTP_400_BAD_REQUEST)
-"""
 
 
     
