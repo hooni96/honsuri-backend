@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import status
 from recipe.models import Recipe
 from account.models import User
 from rest_framework.views import APIView
@@ -31,3 +32,17 @@ class MyPageView(APIView):
       serializer = UserSerializer(queryset, many=True) 
 
       return Response(serializer.data[0])
+
+
+class UserDeleteView(APIView):
+    '''
+    유저 id 받아서 회원탈퇴 api
+    ---
+    '''
+    def delete(self, request, pk):
+      user_id = request.user.pk
+      if User.objects.get(id=pk, user_id=user_id):
+        User.objects.get(id=pk).delete()
+        return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
+      else:
+        return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
