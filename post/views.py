@@ -41,12 +41,14 @@ class PostList(APIView):
             serializer = PostLikeSerializer(queryset, many=True)
             for each in serializer.data:
                 each['like_count'] = LikePost.objects.filter(post_id=each['id']).count()
+                each['comment_count'] = Comment.objects.filter(post_id=each['id']).count()
 
                 each['likepost'] = True if int(user_id) in each['likepost'] else False
                 post_list.append(each)
         else:
             for each in serializer.data:
                 each['like_count'] = LikePost.objects.filter(post_id=each['id']).count()
+                each['comment_count'] = Comment.objects.filter(post_id=each['id']).count()
                 post_list.append(each)            
         return Response(post_list)
 
