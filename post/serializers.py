@@ -23,11 +23,9 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ( "id", "photos", "content", "created_at", "comment_set", "comment_count")
-        read_only_fields = ("id", "created", "comment_count")
-
-        fields = ( "id", "photos", "content", "created_at","user_id", )
-        read_only_fields = ("id", "created")
+    
+        fields = ( "id", "photos", "content", "created_at", "user_id", )
+        read_only_fields = ("id", "created_at")
         # 좋아요 추가
         extra_kwargs = {'likepost': {'required': False}}
 

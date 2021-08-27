@@ -2,12 +2,9 @@
 from django.core import paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
-<<<<<<< HEAD
 from rest_framework import serializers, status
 from rest_framework.permissions import IsAuthenticated
-=======
-from rest_framework import status
->>>>>>> b7bbc2e1b3b72a8749900c7997405d7702426855
+
 from django.http import Http404
 from rest_framework import filters
 from rest_framework import generics
@@ -21,7 +18,6 @@ from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from django.utils import timezone
 
