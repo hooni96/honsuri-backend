@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
     # my app
     'honsuri',
+    'post',
     'recipe',
     'core',
     'account',
@@ -127,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -173,6 +174,9 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
     # 만약 허용해야할 추가적인 헤더키가 있다면?(사용자정의 키) 여기에 추가하면 됩니다.
 )
+
+MEDIA_URL = '/media/' # 필드명.url 속성으로 참조할 수 있음
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # 실제 파일 저장 root경로
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
