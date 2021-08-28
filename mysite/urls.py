@@ -6,6 +6,9 @@ from django.conf import settings
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 schema_view = get_schema_view( 
     openapi.Info( 
         title="수리수리혼수리 API", 
@@ -24,7 +27,7 @@ urlpatterns = [
     path('', include('mbti.urls')), 
     path('', include('post.urls')), 
     path('', include('mypage.urls')), 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # 디버그=True일때만 swagger 문서가 보이도록 해주는 설정. 
 if settings.DEBUG:
