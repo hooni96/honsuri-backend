@@ -93,8 +93,6 @@ class MyPageView(APIView):
       '''
       user_id = request.user.pk
       password = request.data['password']
-#      user = authenticate(password=password)
-#      if user is None:
       if check_password(password,request.user.password):
         User.objects.get(id = user_id).delete()
         return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
