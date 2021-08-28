@@ -13,7 +13,7 @@ schema_view = get_schema_view(
     openapi.Info( 
         title="수리수리혼수리 API", 
         default_version="v1", 
-        description="수리수리혼수리 Swagger API 문서", 
+        description="수리수리혼수리 Swagger API", 
     ), 
     public=True, 
     permission_classes=(permissions.AllowAny,), 
