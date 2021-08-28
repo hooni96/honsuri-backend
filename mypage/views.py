@@ -9,6 +9,8 @@ from .serializers import *
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
+
 
 
 class MyPostView(APIView):
@@ -82,6 +84,7 @@ class MyPageView(APIView):
       except:
         return Response("Invalid", status=status.HTTP_400_BAD_REQUEST)
 
+  @swagger_auto_schema(request_body=UserDeleteSerializer)
   def delete(self, request):
       '''
       회원탈퇴 api
@@ -89,11 +92,15 @@ class MyPageView(APIView):
       결과: 메시지 반환 {'message': 'DELETED'}
       '''
       user_id = request.user.pk
-      try:
+      password = request.data['password']
+#      user = authenticate(password=password)
+#      if user is None:
+      if check_password(password,request.user.password):
         User.objects.get(id = user_id).delete()
         return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
-      except:
+      else:
         return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
+
       
 
 class PasswordView(APIView): 
