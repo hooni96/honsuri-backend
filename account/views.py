@@ -24,14 +24,14 @@ class RegisterView(CreateAPIView):
     model = User
     serializer_class = UserCreateSerializer
     '''
-    mbti 질문과 보기를 반환하는 api
+    회원가입 api
     ___
     '''
     def post(self, request, formet=None):
         serializer = UserCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
