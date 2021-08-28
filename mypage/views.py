@@ -91,15 +91,16 @@ class MyPageView(APIView):
       ---
       결과: 메시지 반환 {'message': 'DELETED'}
       '''
-      user_id = request.user.pk
-      password = request.data['password']
-      if check_password(password,request.user.password):
-        User.objects.get(id = user_id).delete()
-        return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
-      else:
-        return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
-
-      
+      try:
+        user_id = request.user.pk
+        password = request.data['password']
+        if check_password(password,request.user.password):
+          User.objects.get(id = user_id).delete()
+          return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
+        else:
+          return Response({'message': 'FAILED'}, status = status.HTTP_400_BAD_REQUEST)
+      except KeyError:
+        return Response({"message":"INVALID_KEYS"}, status = status.HTTP_400_BAD_REQUEST)
 
 class PasswordView(APIView): 
     '''
