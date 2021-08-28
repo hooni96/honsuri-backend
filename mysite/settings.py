@@ -51,7 +51,6 @@ INSTALLED_APPS = [
 
     # my app
     'mypage',
-    'honsuri',
     'post',
     'recipe',
     'core',
