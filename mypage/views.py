@@ -1,43 +1,34 @@
-from django.shortcuts import render
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status
-from recipe.models import Recipe
-from account.models import User
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
+from rest_framework.serializers import Serializer
+from recipe.models import Recipe
+from account.models import User
 from .serializers import *
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import authenticate
 
+
 class MyPostView(APIView):
-    '''
-    내가 북마크한 레시피 api
-    ---
-    결과: 좋아요한 레시피(아이디,사진,이름,태그요소들) 반환
-    '''
-
-    permission_classes = [AllowAny]
-
     def get(self, request):
         '''
-        방명록 리스트 전체 조회 및 키워드 검색 API
+        내가 작성한 글 조회 API
+        ---
+        결과: 내가 작성한 글 정보 리스트로 반환
         '''       
-        # keyword에 따른 queryset 필터링
         post_list = []
         
-        # 로그인 여부에 따른 좋아요 여부 추가파트
-        if request.user.is_authenticated: # 로그인 되어 있을 경우
-            user_id = request.user.pk
-            queryset = Post.objects.filter(user_id=user_id)
-            serializer = PostSerializer(queryset, many=True)
-            for each in serializer.data:
-                each['like_count'] = LikePost.objects.filter(post_id=each['id']).count()
-                each['comment_count'] = Comment.objects.filter(post_id=each['id']).count()
-                post_list.append(each)           
+        user_id = request.user.pk
+        queryset = Post.objects.filter(user_id=user_id)
+        serializer = PostSerializer(queryset, many=True)
+        for each in serializer.data:
+            each['like_count'] = LikePost.objects.filter(post_id=each['id']).count()
+            each['comment_count'] = Comment.objects.filter(post_id=each['id']).count()
+            post_list.append(each)           
         return Response(post_list)
+
 
 class MyFavoriteView(APIView): 
   def get(self, request):
@@ -52,6 +43,7 @@ class MyFavoriteView(APIView):
     serializer = MyFavoriteSerializer(queryset, many=True) 
 
     return Response(serializer.data)
+
 
 class MyPageView(APIView): 
   def get(self, request):
@@ -84,7 +76,9 @@ class MyPageView(APIView):
         update_user.favorite_food = request.data['favorite_food']
         update_user.favorite_combination = request.data['favorite_combination']
         update_user.save()
-        return Response("user updated", status=status.HTTP_200_OK)
+        queryset = User.objects.filter(id = user_id)
+        serializer = UserSerializer(queryset, many=True) 
+        return Response(serializer.data[0], status=status.HTTP_200_OK)
       except:
         return Response("Invalid", status=status.HTTP_400_BAD_REQUEST)
 
@@ -92,7 +86,7 @@ class MyPageView(APIView):
       '''
       회원탈퇴 api
       ---
-      결과: 메시지 반환
+      결과: 메시지 반환 {'message': 'DELETED'}
       '''
       user_id = request.user.pk
       try:
@@ -101,6 +95,7 @@ class MyPageView(APIView):
       except:
         return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
       
+
 class PasswordView(APIView): 
     '''
     Password 변경 api

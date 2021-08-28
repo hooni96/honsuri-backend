@@ -73,7 +73,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-#REMOVE_APPEND_SLASH_WARNING                                    #my_settings.py 하면서 추가
+#REMOVE_APPEND_SLASH_WARNING                                   
 APPEND_SLASH = False
 
 ROOT_URLCONF = 'mysite.urls'
@@ -150,7 +150,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS 관련 추가 
-# CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000' ,'http://localhost:3000'] 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL=True
 

@@ -1,5 +1,4 @@
 from django.db import models
-# ckeditor
 from ckeditor.fields import RichTextField
 from core.models import TimestampModel
 from account.models import User

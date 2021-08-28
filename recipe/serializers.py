@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from recipe.models import * 
 
+
 class BaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Base
@@ -20,6 +21,7 @@ class AlcoholVolumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = AlcoholVolume
         fields = ("name",)
+
 
 class RecipeMainSerializer(serializers.ModelSerializer): 
     base = BaseSerializer(read_only=True, many=True)

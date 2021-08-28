@@ -1,14 +1,11 @@
-from typing import AbstractSet
 from rest_framework import serializers
-from account.models import User
-from drf_yasg import openapi
+from .models import User
 from rest_framework_jwt.settings import api_settings
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
-
 from .models import *
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
@@ -17,8 +14,9 @@ JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
 # 기본 유저 모델 불러오기
 User = get_user_model()
 
+
 class UserCreateSerializer(serializers.ModelSerializer):
-    email=serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all(), message="이미 존재하는 아이디 입니다.")])
+    email=serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all(), message="Already_Exists")])
     password = serializers.CharField(
         write_only=True, style={'input_type': 'password', 'placeholder': 'Password'}, validators=[validate_password])
     name = serializers.CharField(write_only=True)
@@ -78,10 +76,12 @@ class UserLoginSerializer(serializers.Serializer):
             'token': jwt_token
         }
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id',)
+
 
 class EmailFindSerializer(serializers.ModelSerializer):
     class Meta:

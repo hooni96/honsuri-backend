@@ -5,7 +5,7 @@ from recipe.serializers import BaseSerializer, IngredientSerializer, FlavorSeria
 from post.serializers import *
 from post.models import *
 from account.models import User 
-from django.contrib.auth import authenticate
+
 
 #내가쓴글
 class MyPostSerializer(serializers.ModelSerializer):
@@ -15,8 +15,8 @@ class MyPostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ( "id", "photos", "content", "created_at", "user_id", )
         read_only_fields = ("id", "created_at")
-        # 좋아요 추가
         extra_kwargs = {'likepost': {'required': False}}
+
 
 #내가좋아하는 레시피
 class MyFavoriteSerializer(serializers.ModelSerializer): 
