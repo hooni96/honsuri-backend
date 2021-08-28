@@ -1,25 +1,21 @@
-#APIView 사용하기 위해 import
 from django.core import paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import Http404
-from rest_framework import filters
-from rest_framework import generics
-from .serializers import *
-from .models import *
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import parser_classes
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
+from .serializers import *
+from .models import *
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-
-from rest_framework.decorators import permission_classes, authentication_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-
 from django.utils import timezone
 
+# ---------------------------------------------------------------------------------------
+# 방명록 API
+# ---------------------------------------------------------------------------------------
 class PostList(APIView): 
     permission_classes = [AllowAny]
 
@@ -61,27 +57,33 @@ class PostList(APIView):
         '''
         방명록 작성 API
         '''
-        if request.user.is_authenticated:
-            user_id = request.user.pk
-            serializer = PostSerializer(data=request.data, context={"request": request})
-            #유효성 검사
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            if request.user.is_authenticated:
+                user_id = request.user.pk
+                serializer = PostSerializer(data=request.data, context={"request": request})
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
+
 
 class PostDetail(APIView): 
     def delete(self, request, pk):
         '''
         방명록 게시물 삭제 
         '''
-        user_id = request.user.pk
-        if Post.objects.get(id=pk, user_id=user_id):
-            Post.objects.get(id=pk).delete()
-            return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
-        else:
+        try:
+            user_id = request.user.pk
+            if Post.objects.get(id=pk, user_id=user_id):
+                Post.objects.get(id=pk).delete()
+                return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
+        except:
             return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(request_body=PostUpdateSerializer)
@@ -89,15 +91,18 @@ class PostDetail(APIView):
         '''
         방명록 게시물 업데이트
         '''
-        user_id = request.user.pk
-        if Post.objects.get(id=pk, user_id=user_id):
-            update_post = Post.objects.get(id=pk)
-            update_post.content = request.data['content']
-            update_post.updated_at = timezone.now()
-            update_post.save()
-            return Response({'message': 'POST_UPDATED'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'FAILED'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user_id = request.user.pk
+            if Post.objects.get(id=pk, user_id=user_id):
+                update_post = Post.objects.get(id=pk)
+                update_post.content = request.data['content']
+                update_post.updated_at = timezone.now()
+                update_post.save()
+                return Response({'message': 'POST_UPDATED'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'FAILED'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
 
 class LikePostView(APIView):
     model = LikePost
@@ -120,6 +125,7 @@ class LikePostView(APIView):
         delete_post.delete()
         return Response({'message': 'DELETE_LIKE_POST'}, status.HTTP_200_OK)
 
+
 # ---------------------------------------------------------------------------------------
 # 덧글 API
 # ---------------------------------------------------------------------------------------
@@ -128,51 +134,77 @@ class CommentGetPost(APIView):
     @swagger_auto_schema(tags=['comment'])
     def get(self, request, post_id):
         '''
-        POST ID로 댓글 전체 읽어오기
+        댓글 리스트 API
+        ---
+        파라미터: path로 post_id 전달
+        결과: 덧글리스트 반환
         '''
-        comments = Comment.objects.filter(post=post_id)
-        serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data)
+        try:
+            comments = Comment.objects.filter(post=post_id)
+            serializer = CommentSerializer(comments, many=True)
+            return Response(serializer.data)
+        except:
+            return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(request_body=CommentSerializer, tags=['comment'])
     def post(self, request, post_id):
         '''
-        댓글 작성
+        댓글 작성 API
+        ---
+        파라미터: RequestBody로 content 전달, path로 post_id 전달
+        결과: {'message': 'POST_SUCCESS'}
         '''
-        if request.user.is_authenticated: 
-            Comment.objects.create(
-                    user_id = request.user.pk,
-                    post_id = post_id,
-                    content = request.data['content']
-                ).save
-            return Response({'message': 'POST_SUCCESS'}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({'message': 'NOT_LOGGEDIN'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            if request.user.is_authenticated: 
+                Comment.objects.create(
+                        user_id = request.user.pk,
+                        post_id = post_id,
+                        content = request.data['content']
+                    ).save
+                return Response({'message': 'POST_SUCCESS'}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'message': 'NOT_LOGGEDIN'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
+
 
 class CommentDelete(APIView): 
     @swagger_auto_schema(tags=['comment'])
     def delete(self, request, comment_id):
         '''
-        덧글 id 입력받아 삭제 
+        덧글 삭제 API
+        ---
+        파라미터: 덧글 id
+        결과: {'message': 'DELETED'}
         '''
-        user_id = request.user.pk
-        if Comment.objects.get(id=comment_id, user_id=user_id): # 본인 덧글이면
-            Comment.objects.get(id=comment_id).delete()
-            return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
-        else:
+        try:
+            user_id = request.user.pk
+            if Comment.objects.get(id=comment_id, user_id=user_id): # 본인 덧글이면
+                Comment.objects.get(id=comment_id).delete()
+                return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
+        except:
             return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
+
 
     @swagger_auto_schema(request_body=CommentSerializer, tags=['comment'])
     def patch(self, request, comment_id): 
         '''
-        댓글 업데이트
+        댓글 업데이트 API
+        ---
+        파라미터: 덧글 ID
+        결과: {'message': 'UPDATED'}
         '''
-        user_id = request.user.pk
-        if Comment.objects.get(id=comment_id, user_id=user_id): # 본인 덧글이면
-            update_comment = Comment.objects.get(id=comment_id)
-            update_comment.content = request.data['content']
-            update_comment.updated_at = timezone.now()
-            update_comment.save()
-            return Response({'message': 'UPDATED'}, status=status.HTTP_200_OK)
-        else:
+        try:
+            user_id = request.user.pk
+            if Comment.objects.get(id=comment_id, user_id=user_id): # 본인 덧글이면
+                update_comment = Comment.objects.get(id=comment_id)
+                update_comment.content = request.data['content']
+                update_comment.updated_at = timezone.now()
+                update_comment.save()
+                return Response({'message': 'UPDATED'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
+        except:
             return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)

@@ -1,8 +1,8 @@
-from django.shortcuts import render
 from .serializers import MusicSerializer 
 from music.models import Music
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
+
 
 class MusicView(generics.ListAPIView):
     '''

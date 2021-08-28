@@ -1,6 +1,7 @@
 from django.db import models
 from core.models import TimestampModel
 
+
 class Music(TimestampModel):
     title = models.CharField(max_length=100, verbose_name="노래 제목")
     photo = models.CharField(max_length=100, verbose_name="앨범 사진 이름")

@@ -1,14 +1,14 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from .serializers import *
 from recipe.models import * 
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from rest_framework.decorators import permission_classes, authentication_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
 
 class RecipeMainView(APIView):
     '''
@@ -53,6 +53,7 @@ class RecipeMainView(APIView):
             serializer = RecipeMainSerializerNotLoggedin(queryset, many=True) 
             return Response(serializer.data)
 
+
 class RecipeDetailView(APIView): 
     '''
     recipe detail 반환 api
@@ -64,25 +65,25 @@ class RecipeDetailView(APIView):
     '''
     permission_classes = [AllowAny]
     def get(self, request, pk):
-        queryset = Recipe.objects.filter(id=pk)
+        try:
+            queryset = Recipe.objects.filter(id=pk)
 
-        # 로그인 여부에 따른 북마크 반환 여부
-        if request.user.is_authenticated: # 로그인이 되어 있을 경우
-            user_id = request.user.pk # 토큰에서 user_id 받아옴
-            serializer = RecipeDetailSerializer(queryset, many=True)
-            # 북마크 True or False로 반환
-            if user_id in serializer.data[0]['bookmark']:
-                serializer.data[0]['bookmark'] = True
-            else:
-                serializer.data[0]['bookmark'] = False
-        else: # 로그인이 안 되어 있을 경우, 북마크 반환 안 함
-            serializer = RecipeDetailSerializerNotLoggedin(queryset, many=True)
-        
-        return Response(serializer.data)
+            # 로그인 여부에 따른 북마크 반환 여부
+            if request.user.is_authenticated: # 로그인이 되어 있을 경우
+                user_id = request.user.pk # 토큰에서 user_id 받아옴
+                serializer = RecipeDetailSerializer(queryset, many=True)
+                # 북마크 True or False로 반환
+                if user_id in serializer.data[0]['bookmark']:
+                    serializer.data[0]['bookmark'] = True
+                else:
+                    serializer.data[0]['bookmark'] = False
+            else: # 로그인이 안 되어 있을 경우, 북마크 반환 안 함
+                serializer = RecipeDetailSerializerNotLoggedin(queryset, many=True)        
+            return Response(serializer.data)
+        except:
+            return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
 
 class BookmarkView(APIView): 
-    @permission_classes((IsAuthenticated, ))
-    @authentication_classes((JSONWebTokenAuthentication,))
     def post(self, request, pk):
         '''
         recipe 북마크 생성&삭제 api
@@ -91,15 +92,18 @@ class BookmarkView(APIView):
         파라미터: path로 레시피 id 전달
         결과: 북마크 생성 or 삭제 여부
         '''
-        recipe = get_object_or_404(Recipe, pk=pk) # 레시피 객체
-        user_id = request.user.pk # 토큰에서 user_id 받아옴
-        user = User.objects.get(id = user_id) # user 객체
+        try:
+            recipe = get_object_or_404(Recipe, pk=pk) # 레시피 객체
+            user_id = request.user.pk # 토큰에서 user_id 받아옴
+            user = User.objects.get(id = user_id) # user 객체
 
-        if user in recipe.bookmark.all():
-            recipe.bookmark.remove(user_id)
-            return Response({'message': 'DELETE_BOOKMARK'}, status=status.HTTP_200_OK)
-        else:
-            recipe.bookmark.add(user_id)
-            return Response({'message': 'CREATE_BOOKMARK'}, status=status.HTTP_200_OK)
+            if user in recipe.bookmark.all():
+                recipe.bookmark.remove(user_id)
+                return Response({'message': 'DELETE_BOOKMARK'}, status=status.HTTP_200_OK)
+            else:
+                recipe.bookmark.add(user_id)
+                return Response({'message': 'CREATE_BOOKMARK'}, status=status.HTTP_200_OK)
+        except:
+            return Response({'message': 'FAILED'}, status.HTTP_400_BAD_REQUEST)
 
         
