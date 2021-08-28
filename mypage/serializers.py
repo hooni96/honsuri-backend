@@ -52,6 +52,10 @@ class PasswordSerializer(serializers.ModelSerializer):
         model = User
         fields = ['password','new_password1','new_password2']
 
+class UserDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['password']
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
