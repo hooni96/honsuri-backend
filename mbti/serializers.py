@@ -2,10 +2,12 @@ from rest_framework import serializers
 from mbti.models import Mbti, MbtiResult
 from recipe.models import Recipe
 
+
 class MbtiSerializer(serializers.ModelSerializer):    
     class Meta:
         model = Mbti 
         fields = ['id','question','answer'] 
+
 
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:

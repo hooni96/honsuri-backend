@@ -1,13 +1,13 @@
-from django.shortcuts import render
-from .serializers import *
-from mbti.models import Mbti 
-from recipe.models import Recipe
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from .serializers import *
+from .models import Mbti 
+from recipe.models import Recipe
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from rest_framework.response import Response
+
 
 class MbtiView(generics.RetrieveAPIView): 
     '''
@@ -22,6 +22,7 @@ class MbtiView(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
     queryset = Mbti.objects.all() 
     serializer_class = MbtiSerializer 
+
 
 class MbtiResultView(APIView): 
     '''
