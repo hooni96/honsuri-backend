@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
+from rest_framework.serializers import Serializer
 from recipe.models import Recipe
 from account.models import User
 from rest_framework import status
@@ -84,7 +85,9 @@ class MyPageView(APIView):
         update_user.favorite_food = request.data['favorite_food']
         update_user.favorite_combination = request.data['favorite_combination']
         update_user.save()
-        return Response("user updated", status=status.HTTP_200_OK)
+        queryset = User.objects.filter(id = user_id)
+        serializer = UserSerializer(queryset, many=True) 
+        return Response(serializer.data[0], status=status.HTTP_200_OK)
       except:
         return Response("Invalid", status=status.HTTP_400_BAD_REQUEST)
 
