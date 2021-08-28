@@ -58,9 +58,9 @@
 
 | 이름 | 담당 업무 |
 | ------ | ------ |
-| Linda | Music, Mbti, Recipe modeling 및 API 제작 |
-| Jinu | Authentication modeling 및 API 제작 |
-| Yunnie | 방명록 modeling 및 API 제작 |
+| Linda | Backend |
+| Jinu | Backend |
+| Yunnie | Backend |
 
 
 # 환경설정/실행
