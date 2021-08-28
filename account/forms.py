@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-
 from .models import User
+
 
 # 관리자페이지에서 사용하는 폼 수정. 우리 커스텀 유저에 맞는 폼을 생성.
 class UserCreationForm(forms.ModelForm):
@@ -11,7 +11,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'name', 'nickname', 'phone_number', 'alcohol_amount', 'favorite_alcohol', 'favorite_food', 'favorite_combination')
+        fields = ('email', 'name', 'nickname', 'phone_number', 'alcohol_amount', 'favorite_alcohol', 'favorite_food', 'favorite_combination',)
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -33,8 +33,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'password',
-                  'is_active', 'is_admin')
+        fields = ('email', 'name', 'nickname', 'phone_number', 'alcohol_amount', 'favorite_alcohol', 'favorite_food', 'favorite_combination', 'is_active', 'is_admin',)
 
     def clean_password(self):
         return self.initial["password"]

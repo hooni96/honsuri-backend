@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
 from .forms import UserChangeForm, UserCreationForm
 from .models import User
+
 
 # 만든 폼을 관리자 페이지에 적용
 class UserAdmin(BaseUserAdmin):
@@ -20,10 +20,11 @@ class UserAdmin(BaseUserAdmin):
     )
 
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2')}
-         ),
+        (None, {'fields': ('email', 'password1', 'password2')}),
+        ('Personal info', {'fields': ('name', 'nickname','phone_number')}),
+        ('interests', {'fields': ('alcohol_amount', 'favorite_alcohol', 'favorite_food', 'favorite_combination')}),
+        ('Permissions', {'fields': ('is_admin',)}),
+
     )
     search_fields = ('email',)
     ordering = ('email',)

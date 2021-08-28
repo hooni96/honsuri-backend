@@ -1,43 +1,46 @@
 from django.db import models
-from django.conf import settings
+from account.models import User
+from datetime import datetime
+from core.models import TimestampModel
 
 #Post Model
-class Post(models.Model):
+class Post(TimestampModel):
     content = models.TextField(blank=True, verbose_name="방명록 내용")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="방명록 작성 날짜")
-    photo = models.CharField(max_length=100, verbose_name="방명록 사진")
-    # user_id = models.ForeignKey("User", related_name="post", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    likepost = models.ManyToManyField(User, through = 'LikePost', related_name = 'like_post', blank=True) 
 
     def __str__(self):
         return self.content
     class Meta:
         db_table = "post"
         verbose_name= "방명록"
+        ordering=["-created_at"]
 
-#Comment Model
-class Comment(models.Model):
+class PostImage(TimestampModel):
+    post = models.ForeignKey(Post, related_name="photos", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='posts', blank=True, null=True)
+
+    class Meta:
+        db_table = "postImage"
+        ordering=["created_at"]
+
+# Comment Model
+class Comment(TimestampModel):
     content = models.TextField(blank=True, verbose_name="댓글 내용")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="댓글 작성 날짜")
-    # FK
-    # post_id = models.ForeignKey("Post", related_name="post", on_delete=models.CASCADE, db_column="id")
-    # user_id = models.ForeignKey("User", related_name="comment", on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.content
     class Meta:
         db_table = "comment"
         verbose_name= "댓글"
+        ordering=["-created_at"]
 
-# #Like Model
-# class Like(models.Model):
-#     # FK
-#     # post_id = models.ForeignKey("Post", related_name="comment, on_delete=models.CASCADE)
-#     # user_id = models.ForeignKey("User", related_name="comment", on_delete=models.CASCADE)
-#     class Meta:
-#         db_table = "like"
+# Like Model
+class LikePost(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='like_post', blank=True, db_column='post_id')
 
-# class Report(models.Model):
-#     # FK
-#     # post_id = models.ForeignKey("Post", related_name="comment, on_delete=models.CASCADE)
-#     # user_id = models.ForeignKey("User", related_name="comment", on_delete=models.CASCADE)
-#     class Meta:
-#         db_table = "report"
+    class Meta:
+        db_table = "likeposts"
