@@ -71,6 +71,7 @@ python -m venv 가상환경이름
 source 가상환경이름/bin/activate
 pip install -r requirements.txt
 ```
+my_settings.py 파일 추가
 ## 실행 방법
 ### Backend
 `honsuri-backend` 폴더 내에서 가상환경 실행 후 아래 코드 실행
