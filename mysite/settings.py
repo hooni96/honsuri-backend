@@ -228,8 +228,8 @@ SWAGGER_SETTINGS = {
 }
 
 if not DEBUG:
-    DEFAULT_FILE_STORAGE = "config.storages.UploadStorage"
-    STATICFILES_STORAGE = "config.storages.StaticStorage"
+    DEFAULT_FILE_STORAGE = "mysite.storages.UploadStorage"
+    STATICFILES_STORAGE = "mysite.storages.StaticStorage"
     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
     AWS_S3_REGION_NAME = "ap-northeast-2"
