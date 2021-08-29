@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-import my_settings # my_setting.py의 설정을 적용하기 위해 임포트
-
+# import my_settings # my_setting.py의 설정을 적용하기 위해 임포트
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,10 +12,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = my_settings.SECRET['secret']
+SECRET_KEY = os.environ.get('secret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -90,8 +90,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = my_settings.DATABASES
-
+# DATABASES = my_settings.DATABASES
+if not DEBUG:
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES["default"].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
