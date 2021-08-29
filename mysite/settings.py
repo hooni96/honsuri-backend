@@ -183,7 +183,7 @@ CORS_ALLOW_HEADERS = (
 )
 
 MEDIA_URL = '/media/' # 필드명.url 속성으로 참조할 수 있음
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # 실제 파일 저장 root경로
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads') # 실제 파일 저장 root경로
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
