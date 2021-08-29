@@ -226,3 +226,18 @@ SWAGGER_SETTINGS = {
       }
    }
 }
+
+DEFAULT_FILE_STORAGE = "config.storages.UploadStorage"
+    STATICFILES_STORAGE = "config.storages.StaticStorage"
+    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+    AWS_S3_REGION_NAME = "ap-northeast-2"
+    AWS_STORAGE_BUCKET_NAME = "honsuri-uploads"
+    AWS_DEFAULT_ACL = "public-read"
+    AWS_S3_CUSTOM_DOMAIN = (
+        f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
+    )
+    AWS_S3_OBJECT_PARAMETERS = {
+        "CacheControl": "max-age=86400",
+    }
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
