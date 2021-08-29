@@ -9,7 +9,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 
-class MbtiView(generics.RetrieveAPIView): 
+class MbtiView(APIView): 
     '''
     mbti 질문과 보기를 반환하는 api
     ___
@@ -20,8 +20,10 @@ class MbtiView(generics.RetrieveAPIView):
         - mbti 무관 질문일 경우: A,B,C,D
     '''
     permission_classes = [AllowAny]
-    queryset = Mbti.objects.all() 
-    serializer_class = MbtiSerializer 
+    def get(self, request):
+      queryset = Mbti.objects.all()
+      serializer = MbtiSerializer(queryset, many=True) 
+      return Response(serializer.data) 
 
 
 class MbtiResultView(APIView): 
