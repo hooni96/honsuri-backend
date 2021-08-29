@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+'''
 DATABASES = {
     "default": {'ENGINE': 'django.db.backends.mysql'
     }
@@ -97,6 +97,18 @@ DATABASES = {
 if not DEBUG:
     db_from_env = dj_database_url.config(conn_max_age=500)
     DATABASES["default"].update(db_from_env)
+'''
+
+DATABASES = {
+    "default": {
+        'ENGINE': 'django.db.backends.mysql',
+        "HOST": os.environ.get("DB_HOST"),
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "PORT": "3306"
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
