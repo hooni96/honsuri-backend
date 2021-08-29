@@ -227,7 +227,8 @@ SWAGGER_SETTINGS = {
    }
 }
 
-DEFAULT_FILE_STORAGE = "config.storages.UploadStorage"
+if not DEBUG:
+    DEFAULT_FILE_STORAGE = "config.storages.UploadStorage"
     STATICFILES_STORAGE = "config.storages.StaticStorage"
     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
