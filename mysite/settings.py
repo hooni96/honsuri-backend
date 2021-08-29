@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get('secret')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['honsuri-backend.herokuapp.com']
 
 
 # Application definition
