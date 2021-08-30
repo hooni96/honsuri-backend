@@ -209,7 +209,7 @@ SIMPLE_JWT = {
 
    # 새로 커스텀한 옵션들
    'JWT_ALLOW_REFRESH': True,      # 토큰 새로고침 기능 활성화. 기본값 False.
-   'JWT_EXPIRATION_DELTA': timedelta(minutes=30),     # datetime.timedelta 의 만료 시간. 기본값 seconds=300. 
+   'JWT_EXPIRATION_DELTA': timedelta(days=7),     # datetime.timedelta 의 만료 시간. 기본값 seconds=300. 
    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=3), # Refresh Token의 새로 고침 시간. 기본값 days=7
    'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.custom_responses.my_jwt_response_handler',  #로그인 또는 새로 고침 후 반환되는 응답 데이터를 제어. 기본값은 {'token' : token } 인데 이건 나중에 우리가 따로 적어줄것임.
 }
