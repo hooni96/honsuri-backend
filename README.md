@@ -2,13 +2,13 @@
 Online pub web service for people who drink alone
 
 ## Table of Contents
-1. [Introduction to Web Services](#1.-introduction-to-web-services)
-2. [Project Configuration](#2.-프로젝트-구성)
-3. [Implementation Features](#3.-구현-기능)
-4. [Wireframe](#4.-와이어프레임)
-5. [Role](#5.-역할)
+1. [Introduction to Web Services](#1-introduction-to-web-services)
+2. [Project Configuration](#2-project-configuration)
+3. [Implementation Features](#3-implementation-features)
+4. [Wireframe](#4-wireframe)
+5. [Role](#5-role)
 
-[Configuration/Execution](#환경설정/실행)
+[Configuration/Execution](#configuration/execution)
 
 ## 1. Introduction to Web Services
 <img src="https://user-images.githubusercontent.com/45763812/130172366-0e79280d-3ba3-4b21-8249-24ef484daad6.jpg" width="50%" height="50%"/>
